@@ -5,6 +5,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
 using BugTracker.Models.CodeFirst;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace BugTracker.Models
 {
@@ -20,7 +22,6 @@ namespace BugTracker.Models
                 return FirstName + " " + LastName;
             }
         }
-
         public ApplicationUser()
         {
             Projects = new HashSet<Project>();
@@ -33,9 +34,6 @@ namespace BugTracker.Models
         public virtual ICollection<TicketHistory> Histories { get; set; }
         public virtual ICollection<TicketComment> Comments { get; set; }
         public virtual ICollection<TicketAttachment> Attachments { get; set; }
-
-        
-
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -66,5 +64,7 @@ namespace BugTracker.Models
         public DbSet<TicketStatus> TicketStatuses { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<TicketPriority> TicketPriorities { get; set; }
+
+        //public System.Data.Entity.DbSet<BugTracker.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

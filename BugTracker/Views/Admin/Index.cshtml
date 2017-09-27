@@ -1,0 +1,55 @@
+﻿@model IEnumerable<BugTracker.Models.AdminViewModels>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table" id="usersTable">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Roles
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @foreach (var role in item.SelectedRoles)
+                {
+                        <span class="label label-default">@role</span>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Edit Roles", "EditUserRoles", new { id = item.User.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+
+</table>
+
+@section Scripts {
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () { $('#usersTable').DataTable(); });
+    </script>
+}
