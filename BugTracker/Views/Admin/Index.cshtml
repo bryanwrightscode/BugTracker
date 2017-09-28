@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<BugTracker.Models.AdminViewModels>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Users";
 }
 
-<h2>Index</h2>
+<h2>Users</h2>
 
-<table class="table" id="usersTable">
+<table class="table table-hover" id="usersTable">
     <thead>
         <tr>
             <th>
@@ -20,7 +20,7 @@
             <th></th>
         </tr>
     </thead>
-    
+
     <tbody>
         @foreach (var item in Model)
         {
@@ -49,6 +49,7 @@
 
 @section Scripts {
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
     <script>
         $(document).ready(function () { $('#usersTable').DataTable(); });
     </script>
