@@ -23,6 +23,13 @@
             }
             ]
         </dd>
+        <dt>Name:</dt>
+        <dd>
+            @Html.Raw(Model.FullName)
+            [
+                @Html.ActionLink("Change your name", "ChangeName")
+            ]
+        </dd>
         <dt>External Logins:</dt>
         <dd>
             @Model.Logins.Count [

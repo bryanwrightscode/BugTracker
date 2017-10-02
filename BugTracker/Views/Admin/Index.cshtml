@@ -3,49 +3,60 @@
     ViewBag.Title = "Users";
 }
 
-<h2>Users</h2>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-content">
+            <h2 class="sub-header">All Users</h2>
+            <div class="fresh-datatables">
+                <table class="table table-hover table-striped" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Roles
+                            </th>
+                            <th class="disabled-sorting"></th>
+                        </tr>
+                    </thead>
 
-<table class="table table-hover" id="usersTable">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Roles
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.Email)
-                </td>
-                <td>
-                    @foreach (var role in item.SelectedRoles)
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.Email)
+                                </td>
+                                <td>
+                                    @foreach (var role in item.SelectedRoles)
                 {
-                        <span class="label label-default">@role</span>
-                    }
-                </td>
-                <td>
-                    @Html.ActionLink("Edit Roles", "EditUserRoles", new { id = item.User.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
+                                        <span class="label label-default">@role</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.User.PowerUser == false)
+                                    {
+                                        @Html.ActionLink("Edit Roles", "EditUserRoles", new { id = item.User.Id })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
 
 
-</table>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div><!--  end card  -->
 
 @section Scripts {
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>

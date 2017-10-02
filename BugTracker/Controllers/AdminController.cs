@@ -15,6 +15,7 @@ namespace BugTracker.Controllers
         //ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
+            ViewBag.Active = "admin";
             List<AdminViewModels> users = new List<AdminViewModels>();
             UserRoleHelper helper = new UserRoleHelper();
             foreach (var user in db.Users.ToList())
@@ -31,6 +32,10 @@ namespace BugTracker.Controllers
         public ActionResult EditUserRoles(string id)
         {
             var user = db.Users.Find(id);
+            if (user.PowerUser == true)
+            {
+                return View(RedirectToAction("Index", "Admin"));
+            }
             var helper = new UserRoleHelper();
             var model = new AdminViewModels();
             model.User = user;
@@ -43,6 +48,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         public ActionResult EditUserRoles(AdminViewModels model)
         {
+            ViewBag.Active = "admin";
             var user = db.Users.Find(model.User.Id);
             UserRoleHelper helper = new UserRoleHelper();
             foreach (var role in db.Roles.Select(r => r.Name).ToList())

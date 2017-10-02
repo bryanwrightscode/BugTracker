@@ -8,6 +8,7 @@ namespace BugTracker.Controllers
 {
     public class HomeController : ApplicationBaseController
     {
+        [Authorize (Roles = "Admin, ProjectManager, Submitter, Developer")]
         public ActionResult Index()
         {
             return View();

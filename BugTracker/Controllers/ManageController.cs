@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
+using BugTracker.Models.Helpers;
+using System.Data.Entity;
 
 namespace BugTracker.Controllers
 {
@@ -32,9 +34,9 @@ namespace BugTracker.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -67,6 +69,7 @@ namespace BugTracker.Controllers
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
+                FullName = db.Users.Find(userId).FullName,
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
@@ -245,6 +248,38 @@ namespace BugTracker.Controllers
         }
 
         //
+        // GET: /Manage/ChangeName
+        public ActionResult ChangeName()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Manage/ChangeName
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeName(ChangeNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            //var user = db.Users.Find(User.Identity.GetUserId());
+            //user.FirstName = model.FirstName;
+            //user.LastName = model.LastName;
+            //db.Entry(user).State = EntityState.Modified;
+            //db.SaveChanges();
+
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            UserManager.Update(user);
+
+            return RedirectToAction("Index", new { Message = "Name changed" });
+        }
+
+        //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
         {
@@ -333,7 +368,7 @@ namespace BugTracker.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -384,6 +419,6 @@ namespace BugTracker.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }
