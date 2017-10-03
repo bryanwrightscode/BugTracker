@@ -163,7 +163,7 @@ namespace BugTracker.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 AddErrors(result);
             }
@@ -206,9 +206,9 @@ namespace BugTracker.Controllers
                 if (user == null/* || !(await UserManager.IsEmailConfirmedAsync(user.Id))*/)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    return View("ForgotPasswordConfirmation", "Account");
                 }
-
+                ViewBag.confirmation = "password";
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
@@ -449,7 +449,11 @@ namespace BugTracker.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard", "Home");
+            }
+            return RedirectToAction("Login", "Account");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BugTracker.Models;
+using BugTracker.Models.Helpers;
+using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,24 +11,24 @@ namespace BugTracker.Controllers
 {
     public class HomeController : ApplicationBaseController
     {
-        [Authorize (Roles = "Admin, ProjectManager, Submitter, Developer")]
-        public ActionResult Index()
+        [Authorize]
+        public ActionResult Dashboard()
         {
-            return View();
-        }
+            UserProjectHelper helper = new UserProjectHelper();
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+            var user = db.Users.Find(User.Identity.GetUserId());
+            DashboardViewModel dashItems = new DashboardViewModel();
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+            {
+                dashItems.User = user;
+                dashItems.All = db.Projects.ToList();
+                dashItems.Assigned = helper.ListUserProjects(user.Id);
+                return View(dashItems);
+            }
+            dashItems.User = user;
+            dashItems.Assigned = helper.ListUserProjects(user.Id);
+            return View(dashItems);
         }
     }
 }

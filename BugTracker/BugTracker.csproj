@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44303</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -195,11 +195,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AdminViewModels.cs" />
     <Compile Include="Models\Helpers\EmailModel.cs" />
+    <Compile Include="Models\Helpers\TicketHelpers.cs" />
     <Compile Include="Models\Helpers\UserProjectHelper.cs" />
     <Compile Include="Models\Helpers\UserRoleHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
@@ -214,6 +216,7 @@
     <Compile Include="Models\CodeFirst\TicketType.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\DashboardViewModels.cs" />
     <Compile Include="Models\ProjectViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -221,6 +224,7 @@
   <ItemGroup>
     <Content Include="Assets\css\bootstrap.min.css" />
     <Content Include="Assets\css\demo.css" />
+    <Content Include="Assets\css\font-awesome.min.css" />
     <Content Include="Assets\css\paper-dashboard.css" />
     <Content Include="Assets\css\themify-icons.css" />
     <Content Include="Assets\examples\calendar.html" />
@@ -479,6 +483,8 @@
     <Content Include="Assets\sass\paper\_typography.scss" />
     <Content Include="Assets\sass\paper\_variables.scss" />
     <Content Include="Assets\examples\.DS_Store" />
+    <None Include="Properties\PublishProfiles\bwright-bugtracker - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\bwright-bugtracker - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -504,7 +510,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -533,6 +539,10 @@
     <Content Include="Views\Projects\Assign.cshtml" />
     <Content Include="Views\Manage\ChangeName.cshtml" />
     <Content Include="Views\Shared\_Layout - Copy.cshtml" />
+    <Content Include="Views\Shared\_LoggedOut.cshtml" />
+    <Content Include="Views\Tickets\Index.cshtml" />
+    <Content Include="Views\Tickets\IndexTemplate.cshtml" />
+    <Content Include="Views\Tickets\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -561,7 +571,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49393</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49393/</IISUrl>
+          <IISUrl>https://localhost:44303/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

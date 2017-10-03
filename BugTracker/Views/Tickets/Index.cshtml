@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BugTracker.Models.CodeFirst.Ticket>
+@{
+    ViewBag.Title = "Tickets";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-content">
+            <div class="fresh-datatables">
+                <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="tickets">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.Title)</th>
+                            <th>@Html.DisplayNameFor(model => model.Created)</th>
+                            <th>@Html.DisplayNameFor(model => model.AssignToUser)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Created)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AssignToUser.FullName)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @if (Request.IsAuthenticated && User.IsInRole("Submitter"))
+    {
+        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Ticket")">
+            <i class="ti-plus"></i>
+        </a>
+    }
+</div>
+@section Scripts {
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () { $('#tickets').DataTable(); });
+    </script>
+}
+

@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width" />
     <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Assets/css/paper-dashboard.css" rel="stylesheet" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/a970589202.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet" rel="stylesheet" type="text/css" />
     <link href="~/Assets/css/themify-icons.css" rel="stylesheet" />
 </head>
@@ -24,8 +24,8 @@
                 Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
             -->
             <div class="logo">
-                @Html.ActionLink("BT", "Index", "Home", null, new { @class = "simple-text logo-mini" })
-                @Html.ActionLink("Bug Tracker", "Index", "Home", null, new { @class = "simple-text logo-normal" })
+                @Html.ActionLink("BT", "Dashboard", "Home", null, new { @class = "simple-text logo-mini" })
+                @Html.ActionLink("Bug Tracker", "Dashboard", "Home", null, new { @class = "simple-text logo-normal" })
             </div>
             <div class="sidebar-wrapper">
                 <div class="user">
@@ -70,12 +70,22 @@
                             <p>Projects</p>
                         </a>
                     </li>
-                    <li class="@(ViewBag.Active == "admin" ? "active" : "")">
-                        <a href="@Url.Action("Index", "Admin")">
-                            <i class="ti-user"></i>
-                            <p>Users</p>
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li class="@(ViewBag.Active == "admin" ? "active" : "")">
+                            <a href="@Url.Action("Index", "Admin")">
+                                <i class="ti-user"></i>
+                                <p>Users</p>
+                            </a>
+                        </li>
+                    }
+                    <li class="@(ViewBag.Active == "tickets" ? "active" : "")">
+                        <a href="@Url.Action("Index", "Tickets")">
+                            <i class="ti-receipt"></i>
+                            <p>Tickets</p>
                         </a>
                     </li>
+                    
                 </ul>
             </div>
         </div>

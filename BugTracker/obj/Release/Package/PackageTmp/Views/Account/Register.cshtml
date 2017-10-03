@@ -1,0 +1,183 @@
+﻿@model BugTracker.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="~/Assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/Assets/img/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>@ViewBag.Title - Bug Tracker</title>
+
+    <!-- Bootstrap core CSS     -->
+    <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!--  Paper Dashboard core CSS    -->
+    <link href="~/Assets/css/paper-dashboard.css" rel="stylesheet" />
+
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="~/Assets/css/demo.css" rel="stylesheet" />
+
+    <!--  Fonts and icons     -->
+    <script src="https://use.fontawesome.com/a970589202.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
+    <link href="~/Assets/css/themify-icons.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-transparent navbar-absolute">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle navbar-toggle-black" data-toggle="collapse" data-target="#toggleTarget">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar "></span>
+                    <span class="icon-bar "></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="toggleTarget">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn" })
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="wrapper wrapper-full-page">
+        <div class="register-page">
+            <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+            <div class="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="header-text">
+                                <h2>Bug Tracker</h2>
+                                <h4>Register for free and experience the bug tracker today.</h4>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-md-offset-2">
+                            <div class="media">
+                                <div class="media-left">
+                                    <div class="icon icon-danger">
+                                        <i class="ti ti-user"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h5>Roles</h5>
+                                    Users can be assigned to several roles, such as developer or project manager. Depending on your role, you will have access to different dashboard and table data.
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <div class="icon icon-warning">
+                                        <i class="ti-package"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h5>Projects</h5>
+                                    Projects are central to the Bug Tracker. Project managers can see all users in a given project, as well as all associated tickets.
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <div class="icon icon-info">
+                                        <i class="ti-receipt"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h5>Tickets</h5>
+                                    Coming soon: soon you will be able to see all activity associated with a bug. Activity includes comments, attachments, and status changes.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="card card-plain">
+                                    <div class="content">
+                                        @Html.ValidationSummary("", new { @class = "text-danger" })
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "Your First Name" })
+                                        </div>
+                                        @Html.ValidationSummary("", new { @class = "text-danger" })
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Your Last Name" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address" })
+                                        </div>
+                                        <div class="form-group">
+                                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                                        </div>
+                                        <div class="form-group">
+                                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Password Confirmation" })
+                                        </div>
+                                    </div>
+                                    <div class="footer text-center">
+                                        <input type="submit" class="btn btn-fill btn-danger btn-wd" value="Register" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer footer-transparent">
+                <div class="container">
+                    <div class="copyright text-center">
+                        &copy;
+                        <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://www.bwright-blog.azurewebsites.net">Bryan Wright</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!--   Core JS Files. Extra: TouchPunch for touch library inside jquery-ui.min.js   -->
+    <script src="~/Assets/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="~/Assets/js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="~/Assets/js/perfect-scrollbar.min.js" type="text/javascript"></script>
+    <script src="~/Assets/js/bootstrap.min.js" type="text/javascript"></script>
+    <!--  Forms Validations Plugin -->
+    <script src="~/Assets/js/jquery.validate.min.js"></script>
+    <!-- Promise Library for SweetAlert2 working on IE -->
+    <script src="~/Assets/js/es6-promise-auto.min.js"></script>
+    <!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+    <script src="~/Assets/js/moment.min.js"></script>
+    <!--  Date Time Picker Plugin is included in this js file -->
+    <script src="~/Assets/js/bootstrap-datetimepicker.js"></script>
+    <!--  Select Picker Plugin -->
+    <script src="~/Assets/js/bootstrap-selectpicker.js"></script>
+    <!--  Switch and Tags Input Plugins -->
+    <script src="~/Assets/js/bootstrap-switch-tags.js"></script>
+    <!-- Circle Percentage-chart -->
+    <script src="~/Assets/js/jquery.easypiechart.min.js"></script>
+    <!--  Charts Plugin -->
+    <script src="~/Assets/js/chartist.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="~/Assets/js/bootstrap-notify.js"></script>
+    <!-- Sweet Alert 2 plugin -->
+    <script src="~/Assets/js/sweetalert2.js"></script>
+    <!-- Vector Map plugin -->
+    <script src="~/Assets/js/jquery-jvectormap.js"></script>
+    <!-- Wizard Plugin    -->
+    <script src="~/Assets/js/jquery.bootstrap.wizard.min.js"></script>
+    <!--  Bootstrap Table Plugin    -->
+    <script src="~/Assets/js/bootstrap-table.js"></script>
+    <!--  Plugin for DataTables.net  -->
+    <script src="~/Assets/js/jquery.datatables.js"></script>
+    <!--  Full Calendar Plugin    -->
+    <script src="~/Assets/js/fullcalendar.min.js"></script>
+    <!-- Paper Dashboard PRO Core javascript and methods for Demo purpose -->
+    <script src="~/Assets/js/paper-dashboard.js"></script>
+</body>
+</html>

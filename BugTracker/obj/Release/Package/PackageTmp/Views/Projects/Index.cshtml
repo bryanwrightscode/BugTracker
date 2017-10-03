@@ -1,0 +1,198 @@
+﻿@using Microsoft.AspNet.Identity
+@model BugTracker.Models.AllAndAssignedProjectsViewModel
+@{
+    ViewBag.Title = "Projects";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-content">
+            <div class="nav-tabs-navigation">
+                <div class="nav-tabs-wrapper">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li role="presentation" class="active"><a href="#assigned" aria-controls="Assigned" role="tab" data-toggle="tab">Assigned</a></li>
+                        @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                        {
+                            <li role="presentation"><a href="#all" aria-controls="All" role="tab" data-toggle="tab">All</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="assigned">
+                    
+                    @if (Model.Assigned.Count() > 0)
+                    {
+                        <div class="fresh-datatables">
+                            <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="Assigned">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Created
+                                        </th>
+                                        <th>
+                                            Updated
+                                        </th>
+                                        <th>
+                                            Title
+                                        </th>
+                                        <th>
+                                            Description
+                                        </th>
+                                        <th>
+                                            Users
+                                        </th>
+                                        <th class="disabled-sorting"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Assigned)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Created)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Updated)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Title)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                            <td>
+                                                @if (item.Users.Count < 4)
+                                                {
+                                                    foreach (var user in item.Users.OrderBy(u => u.LastName))
+                                                    {
+                                                        <span class="label label-default" style="display: inline-block">@user.FullName</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "You and " + (item.Users.Count() - 1) + " others" : item.Users.Count().ToString())
+                                                }
+
+                                            </td>
+                                            @*<td>
+                                                    @Html.DisplayFor(modelItem => item.User.FullName)
+                                                </td>*@
+                                            <td>
+                                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                                                {
+                                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
+                                                    @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p><span class="glyphicon glyphicon-info-sign"></span> Sorry, you are not assigned to any projects</p>
+                    }
+                </div>
+                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                {
+                    <div role="tabpanel" class="tab-pane" id="all">
+                        
+                        @if (Model.All.Count > 0)
+                        {
+                            <div class="fresh-datatables">
+                                <table class="table table-hover table-striped" id="All">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Created
+                                            </th>
+                                            <th>
+                                                Updated
+                                            </th>
+                                            <th>
+                                                Title
+                                            </th>
+                                            <th>
+                                                Description
+                                            </th>
+                                            <th>
+                                                Users
+                                            </th>
+                                            <th class="disabled-sorting"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.All)
+                                        {
+                                            <tr class="@(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "success" : "")">
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Created)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Updated)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Title)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Description)
+                                                </td>
+                                                <td>
+                                                    @if (item.Users.Count < 4)
+                                                    {
+                                                        foreach (var user in item.Users.OrderBy(u => u.LastName))
+                                                        {
+                                                            <span class="label label-default" style="display: inline-block">@user.FullName</span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>
+                                                            @(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "You and " + (item.Users.Count() - 1) + " others" : item.Users.Count().ToString())
+                                                        </p>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                                                    {
+                                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
+                                                        @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                    }
+                                                    
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p><span class="glyphicon glyphicon-info-sign"></span> Sorry, there are no projects.</p>
+                        }
+                    </div>
+                }
+            </div>
+        </div><!--  end card  -->
+    </div>
+    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+    {
+        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Projects")">
+            <i class="ti-plus"></i>
+        </a>
+    }
+    
+</div>
+
+
+
+@section Scripts {
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () { $('#Assigned').DataTable(); $('#All').DataTable(); });
+    </script>
+}

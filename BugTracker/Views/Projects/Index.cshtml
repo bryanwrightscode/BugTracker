@@ -79,8 +79,11 @@
                                                     @Html.DisplayFor(modelItem => item.User.FullName)
                                                 </td>*@
                                             <td>
-                                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                                @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                                                {
+                                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
+                                                    @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                }
                                             </td>
                                         </tr>
                                     }
@@ -153,14 +156,17 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                                    @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                                                    {
+                                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
+                                                        @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                    }
+                                                    
                                                 </td>
                                             </tr>
                                         }
                                     </tbody>
                                 </table>
-
                             </div>
                         }
                         else
@@ -172,6 +178,13 @@
             </div>
         </div><!--  end card  -->
     </div>
+    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+    {
+        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Projects")">
+            <i class="ti-plus"></i>
+        </a>
+    }
+    
 </div>
 
 

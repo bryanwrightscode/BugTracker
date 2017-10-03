@@ -8,8 +8,10 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
+    [RequireHttps]
     public class ApplicationBaseController : Controller
     {
+        
         public ApplicationDbContext db = new ApplicationDbContext();
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)

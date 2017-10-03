@@ -1,0 +1,36 @@
+﻿@model BugTracker.Models.CodeFirst.Ticket
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="col-md-6">
+    <div class="card">
+        @using (Html.BeginForm())
+        {
+            <div class="card-header">
+                <h4 class="card-title">
+                    New Ticket
+                </h4>
+            </div>
+            <div class="card-content">
+                <div class="form-group">
+                    <label>Email address</label>
+                    <input type="email" placeholder="Enter email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input id="checkbox1" type="checkbox" />
+                        <label for="checkbox1">
+                            Checkbox Label
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-fill btn-info">Submit</button>
+            </div>
+        }
+    </div> <!-- end card -->
+</div>
