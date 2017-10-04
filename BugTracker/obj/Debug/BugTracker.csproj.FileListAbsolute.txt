@@ -117,3 +117,5 @@ C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.csprojRes
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.csproj.CoreCompileInputs.cache
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.dll
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.pdb
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\AutoMapper.dll
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\AutoMapper.xml

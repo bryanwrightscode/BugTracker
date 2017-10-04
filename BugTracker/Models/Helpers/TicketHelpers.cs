@@ -49,5 +49,15 @@ namespace BugTracker.Models.Helpers
             var project = db.Projects.Find(projectId);
             return db.Tickets.Where(t => t.ProjectId != projectId).ToList();
         }
+
+        public ICollection<TicketType> ListTicketTypes()
+        {
+            return db.TicketTypes.ToList();
+        }
+
+        public ICollection<TicketPriority> ListTicketPriorities()
+        {
+            return db.TicketPriorities.ToList();
+        }
     }
 }

@@ -4,15 +4,39 @@
     ViewBag.Title = "Assign";
 }
 
-<h2>Assign</h2>
+<div class="col-md-6">
+    <div class="card">
+        @using (Html.BeginForm())
+        {
+            <div class="card-header">
+                <h4 class="card-title">
+                    Project: @Model.AssignProject.Title
+                </h4>
+            </div>
+            <div class="card-content">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.AssignProject.Id)
+                @Html.ListBox("SelectedUsers", Model.Users, new { @class = "multi-select" })
+                <button type="submit" class="btn btn-fill btn-info">Submit</button>
+            </div>
+        }
+    </div> <!-- end card -->
+</div>
 
-<h3>Project: @Model.AssignProject.Title</h3>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.AssignProject.Id)
-    @Html.ListBox("SelectedUsers", Model.Users)
-    <input type="submit" class="btn btn-default" />
+@section Scripts {
+    <script type="text/javascript" src="~/Assets/js/multiselect.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            "use strict";
+            $(".multi-select").multiSelect({
+                selectableHeader: "<div><strong>Available Roles</strong></div>",
+                selectionHeader: "<div><strong>User Roles</strong></div>"
+            });
+            $(".ms-container").append("<i class='ti-reload'></i>");
+        });
+    </script>
 }
+
+
 
 

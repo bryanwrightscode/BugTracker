@@ -28,6 +28,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.AssignToUser.FullName)
                                 </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -37,7 +40,7 @@
     </div>
     @if (Request.IsAuthenticated && User.IsInRole("Submitter"))
     {
-        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Ticket")">
+        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Tickets")">
             <i class="ti-plus"></i>
         </a>
     }
