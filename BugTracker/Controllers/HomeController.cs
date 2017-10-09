@@ -12,7 +12,7 @@ namespace BugTracker.Controllers
     public class HomeController : ApplicationBaseController
     {
         [Authorize]
-        public ActionResult Dashboard()
+        public ActionResult Index()
         {
             UserProjectHelper helper = new UserProjectHelper();
 

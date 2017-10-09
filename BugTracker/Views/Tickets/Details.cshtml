@@ -1,0 +1,172 @@
+﻿@model BugTracker.Models.TicketDetailViewModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="col-lg-6">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">@Model.Ticket.Title</h4>
+            <p class="category">Submitter: @Model.Ticket.OwnerUser.FullName</p>
+        </div>
+        <div class="card-content">
+            <p class="category">Description: @Html.Raw(Model.Ticket.Description)</p><br />
+            <p class="category">
+            Assignee: 
+            @if (Model.Ticket.AssignToUserId == null)
+            {
+                @Html.Raw("No asignee");
+            }
+            else
+            {
+                @Html.Raw(Model.Ticket.AssignToUser.FullName)
+            }
+            </p><br />
+            <p class="category">Status: @Html.Raw(Model.Ticket.TicketStatus.Name)</p><br />
+            <p class="category">Priority: @Html.Raw(Model.Ticket.TicketPriority.Name)</p><br />
+            <p class="category">Type: @Html.Raw(Model.Ticket.TicketType.Name)</p><br />
+            <p class="category">Project: @Html.Raw(Model.Ticket.Project.Title)</p><br />
+        </div>
+        <div class="card-footer">
+            <p class="category">Created: @Html.Raw(Model.Ticket.Created.ToString())</p>
+            <p class="category">Updated: @Html.Raw(Model.Ticket.Updated.ToString())</p>
+        </div>
+    </div>
+    <div class="card card-chat">
+        <div class="card-header">
+            <h4 class="card-title">Comments</h4>
+        </div>
+        <div class="card-content">
+            <ol class="chat">
+                @foreach (var comment in Model.TicketComments)
+                {
+                    if (comment.AuthorId == Model.User.Id)
+                    {
+                        <li class="self">
+                            <div class="msg">
+                                <p>@comment.Author.FullName:</p>
+                                <p>
+                                    @comment.Body
+                                </p>
+                                <div class="card-footer">
+                                    <h6>@comment.Created</h6>
+                                    @if (comment.Updated != null)
+                                    {
+                                        <h6>Edited</h6>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="other">
+                            <div class="msg">
+                                <p>@comment.Author.FullName:</p>
+                                <p>
+                                    @comment.Body
+                                </p>
+                                <div class="card-footer">
+                                    <h6>@comment.Created</h6>
+                                    @if (comment.Updated != null)
+                                    {
+                                        <h6>Edited</h6>
+                                    }
+                                </div>
+                            </div>
+                        </li>
+                    }
+                }
+            </ol>
+            <hr>
+            <div class="send-message">
+                @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                {
+                    <div class="form-group">
+                        @Html.Hidden("Ticket.Id", Model.Ticket.Id)
+                        @Html.TextBoxFor(m => m.TicketComment.Body, new { @class = "form-control text-area", placeholder = "Add new comment", style = "width: calc(100% - 132px); display: inline-block;" })
+                        <div class="send-button">
+                            <button class="btn btn-info btn-fill" type="submit">Send</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="collapse" id="fileUpload">
+        <div class="card">
+            @using (Html.BeginForm("Create", "Attachments", FormMethod.Post, new { enctype = "Multipart/form-data", @class = "form-horizontal" }))
+            {
+                <div class="card-header">
+                    <h4 class="card-title">Add a File</h4>
+                </div>
+                <div class="card-content">
+                    @Html.Hidden("Id", Model.Ticket.Id)
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.File, htmlAttributes: new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
+                            <input name="File" type="file" class="form-control" />
+                            @Html.ValidationMessageFor(m => m.File, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Description, htmlAttributes: new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.Description, new { @class = "form-control text-area", placeholder = "Add a description here" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <label class="col-md-3"></label>
+                        <div class="col-md-9">
+                            <button class="btn btn-info btn-fill" type="submit">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-xs-7"><h4 class="card-title">Attachments</h4></div>
+                <div class="col-xs-5">
+                    <div class="pull-right">
+                        <button class="btn btn-success btn-fill btn-icon btn-sm" type="button" data-toggle="collapse" data-target="#fileUpload" aria-expanded="false" aria-controls="file-upload">
+                            <i class="ti-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-content">
+            <ul class="list-unstyled">
+                @foreach (var attachment in Model.TicketAttachments)
+                {
+                    <li>
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <div class="icon-big icon-success text-center">
+                                    <i class="ti-file"></i>
+                                </div>
+                            </div>
+                            <div class="col-xs-9">
+                                @if (attachment.Description != null)
+                                {
+                                    <p><a href="@Html.Raw(attachment.FileUrl)" target="_blank">@Html.Raw(attachment.Description)</a></p>
+                                }
+                                <span class="text-muted">@Html.Raw(attachment.Created.ToString())</span>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+
+</div>

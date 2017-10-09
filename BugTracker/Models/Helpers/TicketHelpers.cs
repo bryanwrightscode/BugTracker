@@ -1,4 +1,5 @@
 ﻿using BugTracker.Models.CodeFirst;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,24 @@ namespace BugTracker.Models.Helpers
         {
             var project = db.Projects.Find(projectId);
             return project.Tickets.ToList();
+        }
+
+        public ICollection<Ticket> ListPmTickets(string userId)
+        {
+            UserProjectHelper helper = new UserProjectHelper();
+            var projects = helper.ListUserProjects(userId);
+            var tickets = projects.SelectMany(p => p.Tickets).ToList();
+            return tickets;
+        }
+
+        public ICollection<Ticket> ListDevTickets(string userId)
+        {
+            return db.Tickets.Where(t => t.AssignToUserId == userId).ToList();
+        }
+
+        public ICollection<Ticket> ListSubTickets(string userId)
+        {
+            return db.Tickets.Where(t => t.OwnerUserId == userId).ToList();
         }
 
         ///<summary>Lists non project tickets</summary>

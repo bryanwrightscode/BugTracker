@@ -10,9 +10,15 @@
                 <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="tickets">
                     <thead>
                         <tr>
-                            <th>@Html.DisplayNameFor(model => model.Title)</th>
-                            <th>@Html.DisplayNameFor(model => model.Created)</th>
-                            <th>@Html.DisplayNameFor(model => model.AssignToUser)</th>
+                            <th>Ticket</th>
+                            <th>Created</th>
+                            <th>Assignee</th>
+                            <th>Submitter</th>
+                            <th>Project</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th class="disabled-sorting"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -20,13 +26,30 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Title)
+                                    <a href="@Url.Action("Details", "Tickets", new { id = item.Id })">
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </a>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Created)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.AssignToUser.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
                                 </td>
                                 <td>
                                     @Html.ActionLink("Edit", "Edit", new { id = item.Id })

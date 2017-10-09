@@ -20,7 +20,7 @@
             </div>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="assigned">
-                    
+
                     @if (Model.Assigned.Count() > 0)
                     {
                         <div class="fresh-datatables">
@@ -48,44 +48,41 @@
                                 <tbody>
                                     @foreach (var item in Model.Assigned)
                                     {
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Created)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Updated)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Title)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Description)
-                                            </td>
-                                            <td>
-                                                @if (item.Users.Count < 4)
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Updated)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td>
+                                            @if (item.Users.Count < 4)
                                                 {
                                                     foreach (var user in item.Users.OrderBy(u => u.LastName))
                                                     {
-                                                        <span class="label label-default" style="display: inline-block">@user.FullName</span>
+                                                <span class="label label-default" style="display: inline-block">@user.FullName</span>
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    @(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "You and " + (item.Users.Count() - 1) + " others" : item.Users.Count().ToString())
+                                                @(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "You and " + (item.Users.Count() - 1) + " others" : item.Users.Count().ToString())
                                                 }
 
-                                            </td>
-                                            @*<td>
-                                                    @Html.DisplayFor(modelItem => item.User.FullName)
-                                                </td>*@
-                                            <td>
-                                                @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                                        </td>
+                                        <td>
+                                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
                                                 {
-                                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
-                                                    @Html.ActionLink("Assign", "Assign", new { id = item.Id })
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
+                                                @Html.ActionLink("Assign", "Assign", new { id = item.Id })
                                                 }
-                                            </td>
-                                        </tr>
+                                        </td>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>
@@ -99,11 +96,11 @@
                 @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
                 {
                     <div role="tabpanel" class="tab-pane" id="all">
-                        
+
                         @if (Model.All.Count > 0)
                         {
                             <div class="fresh-datatables">
-                                <table class="table table-hover table-striped" id="All">
+                                <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="All">
                                     <thead>
                                         <tr>
                                             <th>
@@ -150,9 +147,7 @@
                                                     }
                                                     else
                                                     {
-                                                        <p>
-                                                            @(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "You and " + (item.Users.Count() - 1) + " others" : item.Users.Count().ToString())
-                                                        </p>
+                                                        @(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "You and " + (item.Users.Count() - 1) + " others" : item.Users.Count().ToString())
                                                     }
                                                 </td>
                                                 <td>
@@ -161,7 +156,7 @@
                                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
                                                         @Html.ActionLink("Assign", "Assign", new { id = item.Id })
                                                     }
-                                                    
+
                                                 </td>
                                             </tr>
                                         }
@@ -176,16 +171,16 @@
                     </div>
                 }
             </div>
-        </div><!--  end card  -->
-    </div>
+        </div>
+    </div><!--  end card  -->
     @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
     {
         <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Projects")">
             <i class="ti-plus"></i>
         </a>
     }
-    
 </div>
+
 
 
 

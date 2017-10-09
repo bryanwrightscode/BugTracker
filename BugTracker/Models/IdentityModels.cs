@@ -22,6 +22,7 @@ namespace BugTracker.Models
                 return FirstName + " " + LastName;
             }
         }
+        public string TimeZone { get; set; }
         public bool PowerUser { get; set; }
         public ApplicationUser()
         {

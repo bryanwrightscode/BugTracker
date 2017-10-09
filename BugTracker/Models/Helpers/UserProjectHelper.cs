@@ -60,9 +60,9 @@ namespace BugTracker.Models.Helpers
         /// <summary>Lists project users</summary>
         public ICollection<ApplicationUser> ListProjectUsers2(int projectId)
         {
-            var project = db.Projects.Find(projectId);
-            return project.Users.ToList();
+            return db.Users.Where(u => u.Projects.All(p => p.Id == projectId)).ToList();
         }
+
         ///<summary>Lists non project users</summary>
         public ICollection<ApplicationUser> ListNotProjectUsers(int projectId)
         {

@@ -55,12 +55,12 @@ namespace BugTracker.Migrations
                 status.Name = "Assigned";
                 context.TicketStatuses.Add(status);
             }
-            if (!context.TicketStatuses.Any(p => p.Name == "In Progress"))
-            {
-                var status = new TicketStatus();
-                status.Name = "In Progress";
-                context.TicketStatuses.Add(status);
-            }
+            //if (!context.TicketStatuses.Any(p => p.Name == "In Progress"))
+            //{
+            //    var status = new TicketStatus();
+            //    status.Name = "In Progress";
+            //    context.TicketStatuses.Add(status);
+            //}
             if (!context.TicketStatuses.Any(p => p.Name == "Resolved"))
             {
                 var status = new TicketStatus();
@@ -190,6 +190,19 @@ namespace BugTracker.Migrations
             }
             var submitterIdDemo = userManager.FindByEmail("submitter@coderfoundry.com").Id;
             userManager.AddToRole(submitterIdDemo, "Submitter");
+
+            if (!context.Users.Any(u => u.Email == "shanda@coderfoundry.com"))
+            {
+                userManager.Create(new ApplicationUser
+                {
+                    UserName = "shanda@coderfoundry.com",
+                    Email = "shanda@coderfoundry.com",
+                    FirstName = "Shanda",
+                    LastName = "Submitter"
+                }, "ShandaSubmitterPassword");
+            }
+            var submitterIdShanda = userManager.FindByEmail("Shanda@coderfoundry.com").Id;
+            userManager.AddToRole(submitterIdShanda, "Submitter");
         }
     }
 }

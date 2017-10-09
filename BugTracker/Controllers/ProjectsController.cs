@@ -49,7 +49,7 @@ namespace BugTracker.Controllers
         }
 
         //Get
-        [Authorize (Roles = "Admin, ProjectManager")]
+        [Authorize(Roles = "Admin, ProjectManager")]
         public ActionResult Assign(int id)
         {
             ViewBag.active = "projects";
@@ -66,13 +66,13 @@ namespace BugTracker.Controllers
             {
                 projectuserVM.Users = new MultiSelectList(db.Users.Where(u => u.PowerUser == false).ToList(), "Id", "FirstName", projectuserVM.SelectedUsers);
             }
-            
+
             return View(projectuserVM);
         }
 
         //Post
         [HttpPost]
-        [Authorize (Roles = "Admin, ProjectManager")]
+        [Authorize(Roles = "Admin, ProjectManager")]
         [ValidateAntiForgeryToken]
         public ActionResult Assign(ProjectAssignViewModel model)
         {
@@ -82,14 +82,22 @@ namespace BugTracker.Controllers
             foreach (var userId in db.Users.Select(r => r.Id).ToList())
             {
                 helper.RemoveUserFromProject(userId, project.Id);
+                if (!model.SelectedUsers.Any(u => u == userId))
+                {
+                    var tickets = project.Tickets.Where(t => t.AssignToUserId == userId);
+                    foreach (var ticket in tickets)
+                    {
+                        ticket.AssignToUserId = null;
+                    }
+                }
             }
             foreach (var userId in model.SelectedUsers)
             {
                 helper.AddUserToProject(userId, project.Id);
             }
             project.Updated = time;
-            //db.Entry(project).State = EntityState.Modified;
-            //db.SaveChanges();
+            db.Entry(project).State = EntityState.Modified;
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -98,7 +106,6 @@ namespace BugTracker.Controllers
         public ActionResult Create()
         {
             ViewBag.active = "projects";
-
             return View();
         }
 
@@ -108,20 +115,21 @@ namespace BugTracker.Controllers
         [Authorize(Roles = "Admin, ProjectManager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Created,Updated,Title,Description,AuthorId")] Project project)
+        public ActionResult Create(CreateProjectViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var user = db.Users.Find(User.Identity.GetUserId());
-                var time = DateTimeOffset.Now;
-                project.AuthorId = user.Id;
-                project.Created = time;
+                var project = new Project();
+                project.AuthorId = User.Identity.GetUserId();
+                project.Created = DateTimeOffset.Now;
+                project.Title = vm.Title;
+                project.Description = vm.Description;
                 db.Projects.Add(project);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(project);
+            return View(vm);
         }
 
         [Authorize(Roles = "Admin, ProjectManager")]
@@ -132,12 +140,12 @@ namespace BugTracker.Controllers
 
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index");
             }
             Project project = db.Projects.Find(id);
             if (project == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index");
             }
             return View(project);
         }

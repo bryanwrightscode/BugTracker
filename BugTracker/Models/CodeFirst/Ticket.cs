@@ -28,6 +28,7 @@ namespace BugTracker.Models.CodeFirst
 
         public virtual Project Project { get; set; }
         public virtual TicketType TicketType { get; set; }
+        public virtual TicketPriority TicketPriority { get; set; }
         public virtual TicketStatus TicketStatus { get; set; }
         public virtual ApplicationUser OwnerUser { get; set; }
         public virtual ApplicationUser AssignToUser { get; set; }

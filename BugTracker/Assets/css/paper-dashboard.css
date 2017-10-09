@@ -8505,6 +8505,7 @@ star {
   width: 75px;
   display: inline-block;
 }
+
 .card-chat ::-webkit-input-placeholder {
   color: #9A9A9A;
 }
@@ -8596,6 +8597,8 @@ star {
   display: inline-block;
   width: calc(100% - 132px);
 }
+
+
 @media screen and (max-width: 800px) {
   .card-chat .msg img {
     width: 300px;

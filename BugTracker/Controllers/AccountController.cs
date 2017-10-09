@@ -139,6 +139,8 @@ namespace BugTracker.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            var timeZones = TimeZoneInfo.GetSystemTimeZones();
+            ViewBag.timeZones = new SelectList(timeZones, "Id", "Id");
             return View();
         }
 
@@ -449,11 +451,7 @@ namespace BugTracker.Controllers
             {
                 return Redirect(returnUrl);
             }
-            if (Request.IsAuthenticated)
-            {
-                return RedirectToAction("Dashboard", "Home");
-            }
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

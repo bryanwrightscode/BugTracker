@@ -52,16 +52,13 @@ namespace BugTracker.Models.Helpers
         //list all users in role
         public ICollection<ApplicationUser> ListRoleUsers(string roleName)
         {
-            List<ApplicationUser> resultList = new List<ApplicationUser>();
-            List<ApplicationUser> List = userManager.Users.ToList();
-            foreach(var user in List)
-            {
-                if (UserIsInRole(user.Id, roleName))
-                {
-                    resultList.Add(user);
-                }
-            }
-            return resultList;
+            return db.Users.Where(u => u.Roles.Join(db.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r).Any(r => r.Name.Equals(roleName))).ToList();
+        }
+
+        //list all users in role by given users list
+        public ICollection<ApplicationUser> ListRoleUsers(ICollection<ApplicationUser> users, string roleName)
+        {
+            return users.Where(u => u.Roles.Join(db.Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r).Any(r => r.Name.Equals(roleName))).ToList();
         }
 
         //list users not in role
@@ -69,7 +66,7 @@ namespace BugTracker.Models.Helpers
         {
             List<ApplicationUser> resultList = new List<ApplicationUser>();
             List<ApplicationUser> List = userManager.Users.ToList();
-            foreach(var user in List)
+            foreach (var user in List)
             {
                 if (!UserIsInRole(user.Id, roleName))
                 {

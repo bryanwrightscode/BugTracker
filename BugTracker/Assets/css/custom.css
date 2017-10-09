@@ -1,0 +1,9 @@
+﻿div.send-message form div.form-group input#NewComment.form-control.text-area {
+    display: inline-block;
+    width: calc(100% - 172px);
+}
+
+div.send-message form div.form-group div.send-button {
+    width: 75px;
+    display: inline-block;
+}
