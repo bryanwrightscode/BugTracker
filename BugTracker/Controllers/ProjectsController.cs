@@ -81,15 +81,32 @@ namespace BugTracker.Controllers
             var time = DateTimeOffset.Now;
             foreach (var userId in db.Users.Select(r => r.Id).ToList())
             {
-                helper.RemoveUserFromProject(userId, project.Id);
                 if (!model.SelectedUsers.Any(u => u == userId))
                 {
                     var tickets = project.Tickets.Where(t => t.AssignToUserId == userId);
                     foreach (var ticket in tickets)
                     {
+                        var history = new TicketHistory
+                        {
+                            PropertyId = 34,
+                            ActionId = 9,
+                            AuthorId = User.Identity.GetUserId(),
+                            Created = DateTimeOffset.Now,
+                            TicketId = ticket.Id,
+                            OldValue = ticket.AssignToUser.FullName,
+                            NewValue = null
+                        };
+                        db.TicketHistories.Add(history);
+                        db.SaveChanges();
                         ticket.AssignToUserId = null;
+                        ticket.Updated = DateTimeOffset.Now;
+                        if (ticket.TicketStatusId == 5)
+                        {
+                            ticket.TicketStatusId = 4;
+                        }
                     }
                 }
+                helper.RemoveUserFromProject(userId, project.Id);
             }
             foreach (var userId in model.SelectedUsers)
             {

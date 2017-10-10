@@ -119,3 +119,5 @@ C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.dll
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.pdb
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\AutoMapper.dll
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\AutoMapper.xml
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.Migrations.AddTicketHistoryProperties.resources
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Debug\BugTracker.csproj.GenerateResource.Cache

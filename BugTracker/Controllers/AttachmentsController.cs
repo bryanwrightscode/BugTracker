@@ -34,6 +34,7 @@ namespace BugTracker.Controllers
                     var attachment = new TicketAttachment();
                     var filePath = "/Attachments/";
                     var absPath = Server.MapPath("~" + filePath);
+                    attachment.FileName = em.File.FileName;
                     attachment.FileUrl = filePath + em.File.FileName;
                     em.File.SaveAs(Path.Combine(absPath, em.File.FileName));
                     attachment.TicketId = ticket.Id;
@@ -41,6 +42,16 @@ namespace BugTracker.Controllers
                     attachment.Created = DateTimeOffset.Now;
                     attachment.Description = em.Description;
                     db.TicketAttachments.Add(attachment);
+
+                    var history = new TicketHistory();
+                    history.TicketId = ticket.Id;
+                    history.AuthorId = User.Identity.GetUserId();
+                    history.Created = DateTimeOffset.Now;
+                    history.PropertyId = 35;
+                    history.ActionId = 6;
+                    history.NewValue = attachment.FileName;
+                    db.TicketHistories.Add(history);
+
                     db.SaveChanges();
                     return RedirectToAction("Details", "Tickets", new { id = em.Id });
                 }

@@ -161,7 +161,6 @@
                                 </div>
                             </div>
                             <div class="col-xs-6">
-                                @Html.Raw(attachment.FileName)
                                 @if (attachment.Description != null)
                                 {
                                     <p>@Html.Raw(attachment.Description)</p>
@@ -181,86 +180,6 @@
             </ul>
         </div>
     </div>
-    <ol></ol>
-
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Ticket History</h4>
-        </div>
-        <div class="card-content">
-            <ul class="list-unstyled">
-                @foreach (var history in Model.TicketHistories)
-                {
-                    <li>
-                        <div class="row">
-                            <div class="col-xs-1">
-                                @if (history.PropertyId == 34)
-                                {
-                                    <p class="text-center text-info">
-                                        <i class="ti-user"></i>
-                                    </p>
-                                }
-                                @if (history.PropertyId == 36)
-                                {
-                                    <p class="text-center text-info">
-                                        <i class="ti-comment"></i>
-                                    </p>
-                                }
-                                @if (history.PropertyId == 15)
-                                {
-                                    <p class="text-center text-info">
-                                        <i class="ti-plus"></i>
-                                    </p>
-                                }
-                                @if (history.PropertyId == 29 || history.PropertyId == 30 || history.PropertyId == 31 || history.PropertyId == 32 || history.PropertyId == 33)
-                                {
-                                    <p class="text-center text-info">
-                                        <i class="ti-receipt"></i>
-                                    </p>
-                                }
-                                @if (history.PropertyId == 35)
-                                {
-                                    <p class="text-center text-info">
-                                        <i class="ti-file"></i>
-                                    </p>
-                                }
-                            </div>
-                            <div class="col-xs-11">
-                                <p style="margin-bottom: -3px">
-                                    @history.Author.FullName @history.Action.Name.ToLower() @history.Property.Name
-                                    @if (history.OldValue != null && history.NewValue != null)
-                                    {
-                                        <text>from </text>@history.OldValue<text> to </text>@history.NewValue
-                                    }
-                                    @if (history.OldValue != null && history.NewValue == null)
-                                    {
-                                        @history.OldValue
-                                    }
-                                    @if (history.PropertyId == 34 && history.ActionId == 9)
-                                    {
-                                        <text>from the project</text>
-                                    }
-                                    @if (history.OldValue == null && history.NewValue != null)
-                                    {
-                                        @history.NewValue
-                                    }
-                                    else
-                                    {
-                                        <text>to </text>@history.NewValue
-                                    }
-                                </p>
-                                <p class="text-muted">
-                                    @history.Created
-                                </p>
-
-                            </div>
-                        </div>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-
 
 
 </div>

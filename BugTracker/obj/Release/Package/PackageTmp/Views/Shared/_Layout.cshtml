@@ -15,6 +15,7 @@
     <script src="https://use.fontawesome.com/a970589202.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet" rel="stylesheet" type="text/css" />
     <link href="~/Assets/css/themify-icons.css" rel="stylesheet" />
+    <link href="~/Assets/css/multiselect.css" rel="stylesheet" />
 </head>
 <body>
     <div class="wrapper">
@@ -24,8 +25,8 @@
                 Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
             -->
             <div class="logo">
-                @Html.ActionLink("BT", "Dashboard", "Home", null, new { @class = "simple-text logo-mini" })
-                @Html.ActionLink("Bug Tracker", "Dashboard", "Home", null, new { @class = "simple-text logo-normal" })
+                @Html.ActionLink("BT", "Index", "Home", null, new { @class = "simple-text logo-mini" })
+                @Html.ActionLink("Bug Tracker", "Index", "Home", null, new { @class = "simple-text logo-normal" })
             </div>
             <div class="sidebar-wrapper">
                 <div class="user">
@@ -79,6 +80,12 @@
                             </a>
                         </li>
                     }
+                    <li class="@(ViewBag.Active == "tickets" ? "active" : "")">
+                        <a href="@Url.Action("Index", "Tickets")">
+                            <i class="ti-receipt"></i>
+                            <p>Tickets</p>
+                        </a>
+                    </li>
                     
                 </ul>
             </div>

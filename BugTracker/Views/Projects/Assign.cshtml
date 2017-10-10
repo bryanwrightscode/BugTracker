@@ -16,11 +16,21 @@
             <div class="card-content">
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.AssignProject.Id)
-                @Html.ListBox("SelectedUsers", Model.Users, new { @class = "multi-select" })
-                <button type="submit" class="btn btn-fill btn-info">Submit</button>
+                <div class="form-group">
+                    @Html.ListBox("SelectedUsers", Model.Users, new { @class = "multi-select" })
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-fill btn-info">Submit</button>
+                </div>
             </div>
         }
     </div> <!-- end card -->
+    <a href="@Url.Action("Index", "Projects")" class="btn btn-wd btn-default btn-fill btn-move-left">
+        <span class="btn-label">
+            <i class="ti-angle-left"></i>
+        </span>
+        Back
+    </a>
 </div>
 
 @section Scripts {
@@ -29,10 +39,9 @@
         $(function () {
             "use strict";
             $(".multi-select").multiSelect({
-                selectableHeader: "<div><strong>Available Roles</strong></div>",
-                selectionHeader: "<div><strong>User Roles</strong></div>"
+                selectableHeader: "<div><strong>Unassigned Users</strong></div>",
+                selectionHeader: "<div><strong>Assigned Users</strong></div>"
             });
-            $(".ms-container").append("<i class='ti-reload'></i>");
         });
     </script>
 }

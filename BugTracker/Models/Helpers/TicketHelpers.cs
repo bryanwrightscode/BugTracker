@@ -78,5 +78,26 @@ namespace BugTracker.Models.Helpers
         {
             return db.TicketPriorities.ToList();
         }
+
+        ///<summary>Add ticket history item to current ticket based on property</summary>
+        public void AddTicketHistory(int ticketId, int propertyId, string userId)
+        {
+            var ticket = db.Tickets.Find(ticketId);
+            TicketHistory history = new TicketHistory();
+            history.Ticket.Id = ticketId;
+            history.Property.Id = propertyId;
+            history.AuthorId = userId;
+            ticket.Histories.Add(history);
+            db.SaveChanges();
+        }
+
+        ///<summary>Add ticket history item to current ticket</summary>
+        //public void AddTicketHistory(int ticketId, int historyId)
+        //{
+        //    var ticket = db.Tickets.Find(ticketId);
+        //    var history = db.TicketHistories.Find(historyId);
+        //    ticket.Histories.Add(history);
+        //    db.SaveChanges();
+        //}
     }
 }

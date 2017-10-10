@@ -175,7 +175,7 @@
     </div><!--  end card  -->
     @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
     {
-        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Projects")">
+        <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Projects")" style="margin-bottom: 20px;">
             <i class="ti-plus"></i>
         </a>
     }

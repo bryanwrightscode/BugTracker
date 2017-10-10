@@ -205,6 +205,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710101421270_AddTicketHistoryProperties.cs" />
+    <Compile Include="Migrations\201710101421270_AddTicketHistoryProperties.Designer.cs">
+      <DependentUpon>201710101421270_AddTicketHistoryProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CodeFirst\TicketHistoryAction.cs" />
+    <Compile Include="Models\CodeFirst\TicketHistoryProperty.cs" />
     <Compile Include="ViewModels\AdminViewModels.cs" />
     <Compile Include="Models\Helpers\EmailModel.cs" />
     <Compile Include="Models\Helpers\MapperConfig.cs" />
@@ -569,6 +575,11 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201710101421270_AddTicketHistoryProperties.resx">
+      <DependentUpon>201710101421270_AddTicketHistoryProperties.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

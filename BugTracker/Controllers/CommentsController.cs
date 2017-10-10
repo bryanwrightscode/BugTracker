@@ -21,6 +21,16 @@ namespace BugTracker.Controllers
             em.TicketComment.AuthorId = User.Identity.GetUserId();
             em.TicketComment.TicketId = em.Ticket.Id;
             db.TicketComments.Add(em.TicketComment);
+
+            var history = new TicketHistory();
+            history.TicketId = em.Ticket.Id;
+            history.AuthorId = User.Identity.GetUserId();
+            history.Created = DateTimeOffset.Now;
+            history.PropertyId = 36;
+            history.ActionId = 2;
+            history.NewValue = em.TicketComment.Body;
+            db.TicketHistories.Add(history);
+
             db.SaveChanges();
             return (RedirectToAction("Details", "Tickets", new { id = em.Ticket.Id } ));
         }

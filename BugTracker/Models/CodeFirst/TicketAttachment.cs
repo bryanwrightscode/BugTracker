@@ -12,7 +12,7 @@ namespace BugTracker.Models.CodeFirst
         public string Description { get; set; }
         public DateTimeOffset Created { get; set; }
         public string AuthorId { get; set; }
-        public string FilePath { get; set; }
+        public string FileName { get; set; }
         public string FileUrl { get; set; }
 
         public virtual Ticket Ticket { get; set; }
