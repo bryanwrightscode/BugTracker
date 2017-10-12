@@ -2,10 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using BugTracker.ViewModels;
 
 namespace BugTracker.Models
 {
-    public class IndexViewModel
+    public class IndexViewModel : ApplicationBaseViewModel
     {
         public bool HasPassword { get; set; }
         public string FullName { get; set; }
@@ -15,18 +16,18 @@ namespace BugTracker.Models
         public bool BrowserRemembered { get; set; }
     }
 
-    public class ManageLoginsViewModel
+    public class ManageLoginsViewModel : ApplicationBaseViewModel
     {
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }
 
-    public class FactorViewModel
+    public class FactorViewModel : ApplicationBaseViewModel
     {
         public string Purpose { get; set; }
     }
 
-    public class SetPasswordViewModel
+    public class SetPasswordViewModel : ApplicationBaseViewModel
     {
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
@@ -40,7 +41,7 @@ namespace BugTracker.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class ChangePasswordViewModel : ApplicationBaseViewModel
     {
         [Required]
         [DataType(DataType.Password)]
@@ -59,7 +60,7 @@ namespace BugTracker.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class ChangeNameViewModel
+    public class ChangeNameViewModel : ApplicationBaseViewModel
     {
         [Required]
         [DataType(DataType.Text)]
@@ -72,7 +73,7 @@ namespace BugTracker.Models
         public string LastName { get; set; }
     }
 
-    public class AddPhoneNumberViewModel
+    public class AddPhoneNumberViewModel : ApplicationBaseViewModel
     {
         [Required]
         [Phone]
@@ -80,7 +81,7 @@ namespace BugTracker.Models
         public string Number { get; set; }
     }
 
-    public class VerifyPhoneNumberViewModel
+    public class VerifyPhoneNumberViewModel : ApplicationBaseViewModel
     {
         [Required]
         [Display(Name = "Code")]
@@ -92,7 +93,7 @@ namespace BugTracker.Models
         public string PhoneNumber { get; set; }
     }
 
-    public class ConfigureTwoFactorViewModel
+    public class ConfigureTwoFactorViewModel : ApplicationBaseViewModel
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }

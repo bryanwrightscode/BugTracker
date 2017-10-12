@@ -16,16 +16,18 @@ namespace BugTracker.Controllers
         public ActionResult Index()
         {
             ViewBag.Active = "admin";
-            List<AdminViewModels> users = new List<AdminViewModels>();
             UserRoleHelper helper = new UserRoleHelper();
+            AdminIndexViewModel vm = new AdminIndexViewModel();
+            vm.Users = new HashSet<AdminUserRoles>();
             foreach (var user in db.Users.ToList())
             {
-                var eachUser = new AdminViewModels();
-                eachUser.User = user;
-                eachUser.SelectedRoles = helper.ListUserRoles(user.Id).ToArray();
-                users.Add(eachUser);
+                AdminUserRoles loopVm = new AdminUserRoles();
+                loopVm.User = user;
+                loopVm.UserRoles = helper.ListUserRoles(user.Id).ToArray();
+                vm.Users.Add(loopVm);
             }
-            return View(users.OrderBy(u => u.User.LastName).ToList());
+            vm.Users = vm.Users.OrderBy(u => u.User.LastName).ToList();
+            return View(vm);
         }
 
         //get EditUserRoles

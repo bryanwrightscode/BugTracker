@@ -1,21 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using BugTracker.ViewModels;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BugTracker.Models
 {
-    public class ExternalLoginConfirmationViewModel
+    public class ExternalLoginConfirmationViewModel : ApplicationBaseViewModel
     {
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
-    public class ExternalLoginListViewModel
+    public class ExternalLoginListViewModel : ApplicationBaseViewModel
     {
         public string ReturnUrl { get; set; }
     }
 
-    public class SendCodeViewModel
+    public class SendCodeViewModel : ApplicationBaseViewModel
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
@@ -23,7 +24,7 @@ namespace BugTracker.Models
         public bool RememberMe { get; set; }
     }
 
-    public class VerifyCodeViewModel
+    public class VerifyCodeViewModel : ApplicationBaseViewModel
     {
         [Required]
         public string Provider { get; set; }
@@ -39,14 +40,14 @@ namespace BugTracker.Models
         public bool RememberMe { get; set; }
     }
 
-    public class ForgotViewModel
+    public class ForgotViewModel : ApplicationBaseViewModel
     {
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
 
-    public class LoginViewModel
+    public class LoginViewModel : ApplicationBaseViewModel
     {
         [Required]
         [Display(Name = "Email")]
@@ -62,7 +63,7 @@ namespace BugTracker.Models
         public bool RememberMe { get; set; }
     }
 
-    public class RegisterViewModel
+    public class RegisterViewModel : ApplicationBaseViewModel
     {
         [Required]
         [EmailAddress]
@@ -93,7 +94,7 @@ namespace BugTracker.Models
         public string TimeZone { get; set; }
     }
 
-    public class ResetPasswordViewModel
+    public class ResetPasswordViewModel : ApplicationBaseViewModel
     {
         [Required]
         [EmailAddress]
@@ -114,7 +115,7 @@ namespace BugTracker.Models
         public string Code { get; set; }
     }
 
-    public class ForgotPasswordViewModel
+    public class ForgotPasswordViewModel : ApplicationBaseViewModel
     {
         [Required]
         [EmailAddress]

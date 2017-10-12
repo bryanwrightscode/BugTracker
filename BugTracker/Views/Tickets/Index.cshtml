@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BugTracker.Models.CodeFirst.Ticket>
+﻿@model BugTracker.Models.TicketsIndexViewModel
 @{
     ViewBag.Title = "Tickets";
 }
@@ -23,7 +23,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @foreach (var item in Model.Tickets)
                         {
                             <tr>
                                 <td>

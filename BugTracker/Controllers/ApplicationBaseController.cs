@@ -1,5 +1,7 @@
 ﻿using BugTracker.Models;
+using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,39 +13,19 @@ namespace BugTracker.Controllers
     [RequireHttps]
     public class ApplicationBaseController : Controller
     {
-        
         public ApplicationDbContext db = new ApplicationDbContext();
-
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            if (User != null)
+            var result = filterContext.Result as ViewResult;
+            if (result != null)
             {
-                //var context = new ApplicationDbContext();
-                //var username = User.Identity.Name;
-
-                //if (!string.IsNullOrEmpty(username))
-                //{
-                //    var user = context.Users.SingleOrDefault(u => u.UserName == username);
-
-                //    string firstName = "abc";
-                //    ViewData.Add("FirstName", firstName);
-                //}
-
-                if (Request.IsAuthenticated)
+                var baseModel = result.Model as ApplicationBaseViewModel;
+                if (baseModel != null)
                 {
-                    var user = db.Users.Find(User.Identity.GetUserId());
-                    string firstName = user.FirstName;
-                    string lastName = user.LastName;
-                    string fullName = user.FullName;
-                    ViewData.Add("FirstName", firstName);
-                    ViewData.Add("LastName", lastName);
-                    ViewData.Add("FullName", fullName);
-
+                    baseModel.CurrentUser = db.Users.Find(User.Identity.GetUserId());
+                    baseModel.IsNotificationHistories = baseModel.CurrentUser.Histories.Where(h => h.IsNotification == true && h.DeveloperId == baseModel.CurrentUser.Id).OrderByDescending(h => h.Created).Take(10).ToArray();
                 }
             }
-            base.OnActionExecuted(filterContext);
         }
-        public ApplicationBaseController()
-        { }
     }
 }

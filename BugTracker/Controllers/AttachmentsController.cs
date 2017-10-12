@@ -3,6 +3,7 @@ using BugTracker.Models.CodeFirst;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -42,6 +43,7 @@ namespace BugTracker.Controllers
                     attachment.Created = DateTimeOffset.Now;
                     attachment.Description = em.Description;
                     db.TicketAttachments.Add(attachment);
+                    db.Entry(ticket).State = EntityState.Modified;
 
                     var history = new TicketHistory();
                     history.TicketId = ticket.Id;
@@ -50,8 +52,16 @@ namespace BugTracker.Controllers
                     history.PropertyId = 35;
                     history.ActionId = 6;
                     history.NewValue = attachment.FileName;
-                    db.TicketHistories.Add(history);
-
+                    if (ticket.AssignToUserId != null)
+                    {
+                        history.IsNotification = true;
+                        history.DeveloperId = ticket.AssignToUserId;
+                        db.Users.Find(history.DeveloperId).Histories.Add(history);
+                    }
+                    else
+                    {
+                        db.TicketHistories.Add(history);
+                    }
                     db.SaveChanges();
                     return RedirectToAction("Details", "Tickets", new { id = em.Id });
                 }

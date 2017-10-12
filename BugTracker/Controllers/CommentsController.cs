@@ -29,8 +29,16 @@ namespace BugTracker.Controllers
             history.PropertyId = 36;
             history.ActionId = 2;
             history.NewValue = em.TicketComment.Body;
-            db.TicketHistories.Add(history);
-
+            if (em.Ticket.AssignToUserId != null)
+            {
+                history.IsNotification = true;
+                history.DeveloperId = em.Ticket.AssignToUserId;
+                db.Users.Find(history.DeveloperId).Histories.Add(history);
+            }
+            else
+            {
+                db.TicketHistories.Add(history);
+            }
             db.SaveChanges();
             return (RedirectToAction("Details", "Tickets", new { id = em.Ticket.Id } ));
         }

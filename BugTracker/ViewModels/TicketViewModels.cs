@@ -1,5 +1,6 @@
 ﻿using BugTracker.Models.CodeFirst;
 using BugTracker.Models.Helpers;
+using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections;
@@ -12,7 +13,12 @@ using System.Web.Mvc;
 
 namespace BugTracker.Models
 {
-    public class NewTicketViewModel
+    public class TicketsIndexViewModel : ApplicationBaseViewModel
+    {
+        public ICollection<Ticket> Tickets { get; set; }
+    }
+
+    public class NewTicketViewModel : ApplicationBaseViewModel
     {
         [Required(ErrorMessage = "A title is required")]
         [Display(Name = "Ticket Title")]
@@ -47,7 +53,7 @@ namespace BugTracker.Models
     //    public SelectList AssignToUserId { get; set; }
     //}
 
-    public class EditTicketViewModel
+    public class EditTicketViewModel : ApplicationBaseViewModel
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "A title is required")]
@@ -70,7 +76,7 @@ namespace BugTracker.Models
     }
 
 
-    public class TicketDetailViewModel
+    public class TicketDetailViewModel : ApplicationBaseViewModel
     {
         public Ticket Ticket {  get; set; }
         public ICollection<TicketComment> TicketComments { get; set; }
@@ -82,13 +88,13 @@ namespace BugTracker.Models
         public string Description { get; set; }
     }
 
-    public class TicketCommentEditModel
+    public class TicketCommentEditModel : ApplicationBaseViewModel
     {
         public Ticket Ticket { get; set; }
         public TicketComment TicketComment { get; set; }
     }
 
-    public class TicketAttachmentEditModel
+    public class TicketAttachmentEditModel : ApplicationBaseViewModel
     {
         public int Id { get; set; }
         public HttpPostedFileBase File { get; set; }
