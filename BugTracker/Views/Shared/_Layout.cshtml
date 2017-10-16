@@ -20,7 +20,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="sidebar" data-background-color="brown" data-active-color="danger">
+        <div class="sidebar" data-background-color="white" data-active-color="danger">
             <!--
                 Tip 1: you can change the color of the sidebar's background using: data-background-color="white | brown"
                 Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
@@ -54,7 +54,7 @@
                                 <li>
                                     @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                                     {
-                                        @Html.AntiForgeryToken()
+                                    @Html.AntiForgeryToken()
                                     }
                                     <a href="javascript:document.getElementById('logoutForm').submit()">
                                         <span class="sidebar-mini">Lo</span>
@@ -74,12 +74,12 @@
                     </li>
                     @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                     {
-                        <li class="@(ViewBag.Active == "admin" ? "active" : "")">
-                            <a href="@Url.Action("Index", "Admin")">
-                                <i class="ti-user"></i>
-                                <p>Users</p>
-                            </a>
-                        </li>
+                    <li class="@(ViewBag.Active == "admin" ? "active" : "")">
+                        <a href="@Url.Action("Index", "Admin")">
+                            <i class="ti-user"></i>
+                            <p>Users</p>
+                        </a>
+                    </li>
                     }
                     <li class="@(ViewBag.Active == "tickets" ? "active" : "")">
                         <a href="@Url.Action("Index", "Tickets")">
@@ -123,27 +123,30 @@
                             <li class="dropdown">
                                 <a href="#notifications" class="dropdown-toggle btn-rotate" data-toggle="dropdown">
                                     <i class="ti-bell"></i>
-                                    <span class="notification">@Model.IsNotificationHistories.Count().ToString()</span>
+                                    <span class="notification">@Model.IsNotificationHistories.Where(h => h.IsClicked == false).Count().ToString()</span>
                                     <p class="hidden-md hidden-lg">
                                         Notifications
                                         <b class="caret"></b>
                                     </p>
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu" id="">
                                     @if (Model.IsNotificationHistories != null && Model.IsNotificationHistories.Count() > 0)
                                     {
                                         foreach (var history in Model.IsNotificationHistories)
                                         {
-                                            if (history.Created.Minute == DateTimeOffset.Now.Minute)
+                                            if (history.IsClicked == false)
                                             {
-                                                <li class="list-group-item-success"><a href="@Url.Action("Details", "Tickets", new { id = history.TicketId })">@history.OldValue - @history.NewValue</a></li>
+                                                <li class="list-group-item-success"><a href="@Url.Action("UnclickAlert", "Tickets", new { id = history.Id })">@history.OldValue - @history.NewValue</a></li>
                                             }
                                             else
                                             {
-                                                <li><a href="@Url.Action("Details", "Tickets", new { id = history.TicketId })">@history.OldValue - @history.NewValue</a></li>
+                                                <li><a href="@Url.Action("Details", "Tickets", new { id = history.TicketId })">@history.OldValue - @history.NewValue @history.Ticket.Title</a></li>
                                             }
                                         }
-                                        <li><a href="#">View all</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li>You have no notifications</li>
                                     }
                                 </ul>
                             </li>

@@ -17,10 +17,15 @@ using BugTracker.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.SignalR;
+using System.Collections.Concurrent;
+using System.Threading;
+using Microsoft.AspNet.SignalR.Hubs;
+using System.Security.Claims;
 
 namespace BugTracker.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.Authorize]
     [RequireHttps]
     public class TicketsController : ApplicationBaseController
     {
@@ -37,32 +42,40 @@ namespace BugTracker.Controllers
             {
                 vm.Tickets = db.Tickets.ToList();
             }
-            if (User.IsInRole("ProjectManager"))
+            else if (User.IsInRole("ProjectManager"))
             {
                 vm.Tickets = ticketHelper.ListPmTickets(User.Identity.GetUserId()).ToList();
             }
-            if (User.IsInRole("Developer"))
+            else if (User.IsInRole("Developer"))
             {
                 vm.Tickets = ticketHelper.ListDevTickets(User.Identity.GetUserId()).ToList();
             }
-            if (User.IsInRole("Submitter"))
+            else if (User.IsInRole("Submitter"))
             {
                 ticketHelper.ListSubTickets(User.Identity.GetUserId()).ToList();
+                if (db.Users.Find(userId).Projects.Count > 0)
+                {
+                    vm.HasProjects = true;
+                }
             }
             return View(vm);
         }
 
         // GET: Tickets/Create
-        [Authorize(Roles = "Submitter")]
+        [System.Web.Mvc.Authorize(Roles = "Submitter")]
         public ActionResult Create()
         {
             ViewBag.active = "tickets";
             UserProjectHelper helper = new UserProjectHelper();
             NewTicketViewModel vm = new NewTicketViewModel();
-            vm.ProjectList = new SelectList(helper.ListUserProjects(User.Identity.GetUserId()), "Id", "Title");
-            vm.TypeList = new SelectList(db.TicketTypes, "Id", "Name");
-            vm.PriorityList = new SelectList(db.TicketPriorities, "Id", "Name");
-            return View(vm);
+            if (helper.ListUserProjects(User.Identity.GetUserId()).Count > 0)
+            {
+                vm.ProjectList = new SelectList(helper.ListUserProjects(User.Identity.GetUserId()), "Id", "Title");
+                vm.TypeList = new SelectList(db.TicketTypes, "Id", "Name");
+                vm.PriorityList = new SelectList(db.TicketPriorities, "Id", "Name");
+                return View(vm);
+            }
+            return RedirectToAction("Index");
         }
 
         // POST: Tickets/Create
@@ -70,7 +83,7 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Submitter")]
+        [System.Web.Mvc.Authorize(Roles = "Submitter")]
         public ActionResult Create(NewTicketViewModel vm)
         {
             UserProjectHelper helper = new UserProjectHelper();
@@ -133,6 +146,15 @@ namespace BugTracker.Controllers
                 }
             }
             return (RedirectToAction("Index"));
+        }
+
+        public ActionResult UnclickAlert(int id)
+        {
+            var history = db.TicketHistories.Find(id);
+            history.IsClicked = true;
+            db.Entry(history).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Details", new { id = history.Ticket.Id });
         }
 
         public ActionResult Edit(int id)
@@ -288,6 +310,12 @@ namespace BugTracker.Controllers
                         if (ticket.AssignToUserId != vm.AssignToUserId && ticket.AssignToUserId != null)
                         {
                             var history = new TicketHistory { PropertyId = 34, ActionId = 4, OldValue = ticket.AssignToUser.FullName, NewValue = db.Users.Find(vm.AssignToUserId).FullName, IsNotification = true, DeveloperId = vm.AssignToUserId };
+                            var oldUser = db.Users.Find(ticket.AssignToUserId);
+                            foreach (var oldHistory in oldUser.Histories.Where(h => h.TicketId == ticket.Id).ToList())
+                            {
+                                oldUser.Histories.Remove(oldHistory);
+                                db.SaveChanges();
+                            }
                             histories.Add(history);
                             await SendAssignmentEmail(vm.AssignToUserId, ticket.Id);
                         }
@@ -317,6 +345,7 @@ namespace BugTracker.Controllers
                             db.SaveChanges();
                         }
                     }
+
                     return RedirectToAction("Details", new { id = vm.Id });
                 }
                 return RedirectToAction("Index");
@@ -354,7 +383,6 @@ namespace BugTracker.Controllers
 
         public async Task SendAssignmentEmail(string userId, int ticketId)
         {
-
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
             // Send an email with this link
             var callbackUrl = Url.Action("Details", "Tickets", new { id = ticketId }, protocol: Request.Url.Scheme);
@@ -374,5 +402,16 @@ namespace BugTracker.Controllers
                 _userManager = value;
             }
         }
+
+        //public void PushAlerts(TicketHistory alert)
+        //{
+        //    var author = db.Users.Find(alert.AuthorId).FirstName;
+        //    var action = db.TicketHistoryActions.Find(alert.ActionId).Name;
+        //    var property = db.TicketHistoryProperties.Find(alert.PropertyId).Name;
+        //    var displayAlert = String.Concat(author, " ", action, " ", property, " from ", alert.OldValue, " to ", alert.NewValue, " at ", alert.Created.ToString());
+        //    AlertHub.GetAlertFromServer(displayAlert);
+        //}
+
+
     }
 }

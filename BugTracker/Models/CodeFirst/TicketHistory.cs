@@ -16,6 +16,7 @@ namespace BugTracker.Models.CodeFirst
         public int ActionId { get; set; }
 
         public bool IsNotification { get; set; }
+        public bool IsClicked { get; set; }
         public string OldValue { get; set; }
         public string NewValue { get; set; }
         public DateTimeOffset Created { get; set; }

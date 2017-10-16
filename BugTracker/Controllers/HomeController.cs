@@ -30,5 +30,11 @@ namespace BugTracker.Controllers
             dashItems.Assigned = helper.ListUserProjects(user.Id);
             return View(dashItems);
         }
+
+        public ActionResult Landing(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
     }
 }

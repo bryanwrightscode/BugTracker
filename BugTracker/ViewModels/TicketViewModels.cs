@@ -16,6 +16,8 @@ namespace BugTracker.Models
     public class TicketsIndexViewModel : ApplicationBaseViewModel
     {
         public ICollection<Ticket> Tickets { get; set; }
+        public ICollection<Ticket> AllTickets { get; set; }
+        public bool HasProjects { get; set; }
     }
 
     public class NewTicketViewModel : ApplicationBaseViewModel

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace BugTracker.Controllers
 {
@@ -91,6 +92,51 @@ namespace BugTracker.Controllers
             }
         }
 
+        // POST: /Account/Login
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DemoLogin(string role, string returnUrl)
+        {
+            if (role == "Administrator")
+            {
+                var user = await UserManager.FindByEmailAsync("admin@coderfoundry.com");
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, false, false);
+                }
+                return RedirectToLocal(returnUrl);
+            }
+            if (role == "ProjectManager")
+            {
+                var user = await UserManager.FindByEmailAsync("projectmanager@coderfoundry.com");
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, false, false);
+                }
+                return RedirectToLocal(returnUrl);
+            }
+            if (role == "Developer")
+            {
+                var user = await UserManager.FindByEmailAsync("developer@coderfoundry.com");
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, false, false);
+                }
+                return RedirectToLocal(returnUrl);
+            }
+            if (role == "Submitter")
+            {
+                var user = await UserManager.FindByEmailAsync("submitter@coderfoundry.com");
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, false, false);
+                }
+                return RedirectToLocal(returnUrl);
+            }
+            return RedirectToAction("Register", "Account");
+        }
+
         //
         // GET: /Account/VerifyCode
         [AllowAnonymous]
@@ -140,8 +186,9 @@ namespace BugTracker.Controllers
         public ActionResult Register()
         {
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
-            ViewBag.timeZones = new SelectList(timeZones, "Id", "Id");
-            return View();
+            RegisterViewModel vm = new RegisterViewModel();
+            vm.TimeZones = new SelectList(timeZones, "Id", "Id");
+            return View(vm);
         }
 
         //
@@ -153,10 +200,12 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, TimeZone = model.TimeZone };
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    userManager.AddToRole(user.Id, "Submitter");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -165,7 +214,7 @@ namespace BugTracker.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Dashboard", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
@@ -394,7 +443,7 @@ namespace BugTracker.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Landing", "Home");
         }
 
         //

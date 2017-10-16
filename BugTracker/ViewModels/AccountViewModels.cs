@@ -1,6 +1,7 @@
 ﻿using BugTracker.ViewModels;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace BugTracker.Models
 {
@@ -86,12 +87,14 @@ namespace BugTracker.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
         [Required]
         [Display(Name = "Time Zone")]
         public string TimeZone { get; set; }
+
+        public SelectList TimeZones { get; set; }
     }
 
     public class ResetPasswordViewModel : ApplicationBaseViewModel
@@ -109,7 +112,7 @@ namespace BugTracker.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

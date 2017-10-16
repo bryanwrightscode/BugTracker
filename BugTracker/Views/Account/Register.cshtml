@@ -47,6 +47,9 @@
                     <li>
                         @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn" })
                     </li>
+                    <li>
+                        @Html.ActionLink("Demo", "Landing", "Home", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn" })
+                    </li>
                 </ul>
             </div>
         </div>
@@ -95,7 +98,7 @@
                                 </div>
                                 <div class="media-body">
                                     <h5>Tickets</h5>
-                                    Coming soon: soon you will be able to see all activity associated with a bug. Activity includes comments, attachments, and status changes.
+                                    See all activity associated with a bug. Activity includes comments, attachments, and status changes.
                                 </div>
                             </div>
                         </div>
@@ -117,11 +120,12 @@
                                             @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address" })
                                         </div>
                                         <div class="form-group">
-                                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
                                         </div>
                                         <div class="form-group">
-                                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Password Confirmation" })
+                                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Password Confirmation" })
                                         </div>
+                                        @Html.DropDownList("TimeZone", Model.TimeZones, new { @class = "searchableselect" })
                                     </div>
                                     <div class="footer text-center">
                                         <input type="submit" class="btn btn-fill btn-danger btn-wd" value="Register" />

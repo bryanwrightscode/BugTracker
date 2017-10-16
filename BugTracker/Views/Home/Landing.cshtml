@@ -1,0 +1,140 @@
+﻿@{
+    ViewBag.Title = "Landing";
+    Layout = "~/Views/Shared/_LoggedOut.cshtml";
+}
+
+<nav class="navbar navbar-transparent navbar-absolute">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle navbar-toggle-black" data-toggle="collapse" data-target="#toggleTarget">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar "></span>
+                <span class="icon-bar "></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="toggleTarget">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn" })
+                </li>
+                <li>
+                    @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "btn" })
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="wrapper wrapper-full-page">
+    <div class="register-page">
+        <!--   you can change the color of the filter page using: data-color="blue | azure | green | orange | red | purple" -->
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="header-text">
+                            <h2>Bug Tracker Demo</h2>
+                            <h4>Try it out now. No login required.</h4>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-md-offset-2">
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="icon icon-danger">
+                                    <i class="ti ti-user"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h5>Roles</h5>
+                                Users can be assigned to several roles, such as developer or project manager. Depending on your role, you will have access to different dashboard and table data.
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="icon icon-warning">
+                                    <i class="ti-package"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h5>Projects</h5>
+                                Projects are central to the Bug Tracker. Project managers can see all users in a given project, as well as all associated tickets.
+                            </div>
+                        </div>
+                        <div class="media">
+                            <div class="media-left">
+                                <div class="icon icon-info">
+                                    <i class="ti-receipt"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h5>Tickets</h5>
+                                See all activity associated with a bug. Activity includes comments, attachments, and status changes.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                                @using (Html.BeginForm("DemoLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <label class="col-sm-4 control-lable">Choose a Role</label>
+                                    <div class="col-sm-8">
+                                        <div class="radio">
+                                            <input type="radio" name="role" id="admin" value="Administrator">
+                                            <label for="admin">
+                                                Administrator
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <input type="radio" name="role" id="pm" value="ProjectManager">
+                                            <label for="pm">
+                                                Project Manager
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <input type="radio" name="role" id="dev" value="Developer">
+                                            <label for="dev">
+                                                Developer
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <input type="radio" name="role" id="sub" value="Submitter">
+                                            <label for="sub">
+                                                Submitter
+                                            </label>
+                                        </div>
+                                        <input type="submit" class="btn btn-fill btn-danger btn-wd" value="Demo" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <footer class="footer footer-transparent">
+            <div class="container">
+                <div class="copyright text-center">
+                    &copy;
+                    <script>document.write(new Date().getFullYear())</script>, made with <i class="fa fa-heart heart"></i> by <a href="http://www.bwright-blog.azurewebsites.net">Bryan Wright</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Assets/js/demo.js"></script>
+    <script type="text/javascript">
+        $().ready(function () {
+            demo.checkFullPageBackgroundImage();
+
+            setTimeout(function () {
+                // after 1000 ms we add the class animated to the login/register card
+                $('.card').removeClass('card-hidden');
+            }, 700)
+        });
+    </script>
+}
