@@ -4,45 +4,263 @@
     ViewBag.Title = "Home Page";
 }
 
-
-<div class="col-lg-3 col-sm-6">
-    <div class="card">
-        <div class="card-content">
-            <div class="row">
-                <div class="col-xs-5">
-                    <div class="icon-big icon-warning text-center">
-                        <i class="ti-package"></i>
-                    </div>
-                </div>
-                <div class="col-xs-7">
-                    <div class="numbers">
-                        <p>Assigned Projects</p>
-                        @Model.Assigned.Count()
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="col-lg-12 col-sm-12">
+    <h1>Welcome @Model.CurrentUser.FullName!</h1>
+    <h3 class="text-muted">
+        Role: @foreach (var role in Model.UserRole)
+        {
+            @role
+        }
+    </h3>
 </div>
-@if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
-{
-    <div class="col-lg-3 col-sm-6">
+
+<div class="row">
+    <div class="col-md-4">
         <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Tickets Per Project</h4>
+            </div>
             <div class="card-content">
-                <div class="row">
-                    <div class="col-xs-5">
-                        <div class="icon-big icon-success text-center">
-                            <i class="ti-package"></i>
+                <div id="chart-container">
+                    <canvas id="chartjsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+    @if (Model.Assigned.Count() > 0 && Model.Assigned != null)
+    {
+        <div class="col-lg-12 col-sm-12">
+            <h4>Proejcts</h4>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="ti-package"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xs-7">
-                        <div class="numbers">
-                            <p>All Projects</p>
-                            @Model.All.Count()
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Assigned</p>
+                                @Model.Assigned.Count()
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    }
+
+
+    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-package"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>All</p>
+                                @Model.All.Count()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <h4>Tickets</h4>
     </div>
+    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+    {
+        if (Model.AllTickets.Count() > 0 && Model.AllTickets != null)
+        {
+            <div class="col-lg-3 col-sm-6">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <div class="icon-big icon-success text-center">
+                                    <i class="ti-receipt"></i>
+                                </div>
+                            </div>
+                            <div class="col-xs-7">
+                                <div class="numbers">
+                                    <p>All</p>
+                                    @Model.AllTickets.Count()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        if (Model.PmUnassignedTicketsCount != "0" && Model.PmUnassignedTicketsCount != null)
+        {
+            <div class="col-lg-3 col-sm-6">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col-xs-5">
+                                <div class="icon-big icon-danger text-center">
+                                    <i class="ti-receipt"></i>
+                                </div>
+                            </div>
+                            <div class="col-xs-7">
+                                <div class="numbers">
+                                    <p>Unassigned in Projects I'm assigned to</p>
+                                    @Model.PmUnassignedTicketsCount
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        if (User.IsInRole("Admin"))
+        {
+            if (Model.AdminUnassignedTicketsCount != "0" && Model.AdminUnassignedTicketsCount != null)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <div class="icon-big icon-danger text-center">
+                                        <i class="ti-receipt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-xs-7">
+                                    <div class="numbers">
+                                        <p>All Unassigned </p>
+                                        @Model.AdminUnassignedTicketsCount
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+    }
+    @if (Model.MyTickets != null && Model.MyTickets.Count() > 0)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="ti-receipt"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>In Assigned Projects</p>
+                                @Model.MyTickets.Count()
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Request.IsAuthenticated && (User.IsInRole("Developer")) && Model.DevTicketsCount != null && Model.DevTicketsCount != "0")
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-receipt"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Assigned</p>
+                                @Model.DevTicketsCount
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Request.IsAuthenticated && (User.IsInRole("Submitter")) && Model.SubmitterTicketsCount != null && Model.SubmitterTicketsCount != "0")
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-success text-center">
+                                <i class="ti-receipt"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>I Submitted</p>
+                                @Model.SubmitterTicketsCount
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        console.log(@Html.Raw(Json.Encode(Model.ChartJsLables)));
+        console.log(@Html.Raw(Json.Encode(Model.ChartJsValues)));
+        var ctx = $('#chartjsChart');
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Encode(Model.ChartJsLables)),
+                datasets: [{
+                    label: 'Projects',
+                    data: @Html.Raw(Json.Encode(Model.ChartJsValues)),
+                    backgroundColor: [
+                        '#68B3C8',
+                        '#68B3C8',
+                        '#68B3C8',
+                        '#68B3C8',
+                        '#68B3C8',
+                        '#68B3C8'
+                    ]
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
 }

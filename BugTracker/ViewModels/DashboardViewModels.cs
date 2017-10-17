@@ -13,5 +13,14 @@ namespace BugTracker.Models
         public ApplicationUser User { get; set; }
         public ICollection<Project> Assigned { get; set; }
         public ICollection<Project> All { get; set; }
+        public ICollection<Ticket> MyTickets { get; set; }
+        public ICollection<Ticket> AllTickets { get; set; }
+        public string SubmitterTicketsCount { get; set; }
+        public string DevTicketsCount { get; set; }
+        public string PmUnassignedTicketsCount { get; set; }
+        public string AdminUnassignedTicketsCount { get; set; }
+        public string[] UserRole { get; set; }
+        public ICollection<string> ChartJsLables { get; set; }
+        public ICollection<int> ChartJsValues { get; set; }
     }
 }

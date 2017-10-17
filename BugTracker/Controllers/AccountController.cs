@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.UI;
 
 namespace BugTracker.Controllers
 {
@@ -56,6 +57,7 @@ namespace BugTracker.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        [OutputCache(NoStore = true, Location = OutputCacheLocation.None)]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -98,6 +100,8 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DemoLogin(string role, string returnUrl)
         {
+
+            // Check the anti forgery token now
             if (role == "Administrator")
             {
                 var user = await UserManager.FindByEmailAsync("admin@coderfoundry.com");
@@ -187,7 +191,7 @@ namespace BugTracker.Controllers
         {
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
             RegisterViewModel vm = new RegisterViewModel();
-            vm.TimeZones = new SelectList(timeZones, "Id", "Id");
+            vm.TimeZones = new SelectList(timeZones, "Id", "Id", null);
             return View(vm);
         }
 

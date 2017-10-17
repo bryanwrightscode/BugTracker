@@ -1,6 +1,7 @@
 ﻿
 using BugTracker.Models;
 using BugTracker.Models.CodeFirst;
+using BugTracker.Models.Helpers;
 using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -20,6 +21,7 @@ namespace BugTracker.Controllers
     public class ApplicationBaseController : Controller
     {
         public ApplicationDbContext db = new ApplicationDbContext();
+        UserRoleHelper helper = new UserRoleHelper();
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var result = filterContext.Result as ViewResult;
@@ -32,6 +34,7 @@ namespace BugTracker.Controllers
                     {
                         baseModel.CurrentUser = db.Users.Find(User.Identity.GetUserId());
                         baseModel.IsNotificationHistories = baseModel.CurrentUser.Histories.Where(h => h.IsNotification == true && h.DeveloperId == baseModel.CurrentUser.Id).OrderByDescending(h => h.Created).ToArray();
+                        baseModel.Role = helper.ListUserRoles(baseModel.CurrentUser.Id).ToArray();
                     }
                 }
             }

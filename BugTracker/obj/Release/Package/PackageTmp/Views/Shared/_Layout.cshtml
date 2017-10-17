@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@model BugTracker.ViewModels.ApplicationBaseViewModel
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,7 +20,7 @@
 </head>
 <body>
     <div class="wrapper">
-        <div class="sidebar" data-background-color="brown" data-active-color="danger">
+        <div class="sidebar" data-background-color="white" data-active-color="danger">
             <!--
                 Tip 1: you can change the color of the sidebar's background using: data-background-color="white | brown"
                 Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
@@ -37,7 +38,7 @@
                     <div class="info">
                         <a data-toggle="collapse" href="#collapseProfile" class="collapsed">
                             <span>
-                                @ViewData["FullName"]
+                                @Model.CurrentUser.FullName
                                 <b class="caret"></b>
                             </span>
                         </a>
@@ -86,7 +87,6 @@
                             <p>Tickets</p>
                         </a>
                     </li>
-                    
                 </ul>
             </div>
         </div>
@@ -104,49 +104,105 @@
                             <span class="icon-bar bar3"></span>
                         </button>
                         <p class="navbar-text navbar-brand">@ViewBag.Title</p>
+                        <p class="navbar-text">
+                            @foreach (var role in Model.Role)
+                            {
+                                <span class="label label-warning">@role</span>
+                            }
+                        </p>
                         @*<a class="navbar-brand" href="#charts">Template</a>*@
                     </div>
-                    @*<div class="collapse navbar-collapse">
-                        <form class="navbar-form navbar-left navbar-search-form" role="search">
-                            <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                <input type="text" value="" class="form-control" placeholder="Search...">
-                            </div>
-                        </form>
+                    <div class="collapse navbar-collapse">
+                        @*<form class="navbar-form navbar-left navbar-search-form" role="search">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                    <input type="text" value="" class="form-control" placeholder="Search...">
+                                </div>
+                            </form>*@
                         <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a href="#stats" class="dropdown-toggle btn-magnify" data-toggle="dropdown">
-                                    <i class="ti-panel"></i>
-                                    <p>Stats</p>
-                                </a>
-                            </li>
+                            @*<li>
+                                    <a href="#stats" class="dropdown-toggle btn-magnify" data-toggle="dropdown">
+                                        <i class="ti-panel"></i>
+                                        <p>Stats</p>
+                                    </a>
+                                </li>*@
                             <li class="dropdown">
                                 <a href="#notifications" class="dropdown-toggle btn-rotate" data-toggle="dropdown">
                                     <i class="ti-bell"></i>
-                                    <span class="notification">5</span>
+                                    <span class="notification">@Model.IsNotificationHistories.Where(h => h.IsClicked == false).Count().ToString()</span>
                                     <p class="hidden-md hidden-lg">
                                         Notifications
                                         <b class="caret"></b>
                                     </p>
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#not1">Notification 1</a></li>
-                                    <li><a href="#not2">Notification 2</a></li>
-                                    <li><a href="#not3">Notification 3</a></li>
-                                    <li><a href="#not4">Notification 4</a></li>
-                                    <li><a href="#another">Another notification</a></li>
+                                <ul class="dropdown-menu" id="">
+                                    @if (Model.IsNotificationHistories != null && Model.IsNotificationHistories.Count() > 0)
+                                    {
+                                        foreach (var history in Model.IsNotificationHistories)
+                                        {
+                                            if (history.IsClicked == false)
+                                            {
+                                                <li class="list-group-item-success">
+                                                    <a href="@Url.Action("UnclickAlert", "Tickets", new { id = history.Id })">
+                                                        <p style="margin-bottom: -3px">
+                                                            @if (history.OldValue != null && history.NewValue != null)
+                                                            {
+                                                                @(String.Format("{0} {1} {2} from {3} to {4}", history.Author.FirstName, history.Action.Name.ToLower(),
+                                            history.Property.Name.ToLower(), history.OldValue, history.NewValue))
+                                                            }
+                                                            @if (history.OldValue == null && history.NewValue != null)
+                                                            {
+                                                                @(String.Format("{0} {1} {2} {3}", history.Author.FirstName, history.Action.Name.ToLower(),
+                                            history.Property.Name.ToLower(), history.NewValue))
+                                                            }
+                                                        </p>
+                                                        <p class="text-muted">
+                                                            @history.Created
+                                                        </p>
+                                                    </a>
+                                                </li>
+                                                <li class="list-group-item-success"></li>
+                                            }
+                                            else
+                                            {
+                                                <li>
+                                                    <a href="@Url.Action("Details", "Tickets", new { id = history.TicketId })">
+                                                        <p style="margin-bottom: -3px">
+                                                            @if (history.OldValue != null && history.NewValue != null)
+                                                            {
+                                                                @(String.Format("{0} {1} {2} from {3} to {4}", history.Author.FirstName, history.Action.Name.ToLower(),
+                                            history.Property.Name.ToLower(), history.OldValue, history.NewValue))
+                                                            }
+                                                            @if (history.OldValue == null && history.NewValue != null)
+                                                            {
+                                                                @(String.Format("{0} {1} {2} {3}", history.Author.FirstName, history.Action.Name.ToLower(),
+                                            history.Property.Name.ToLower(), history.NewValue))
+                                                            }
+                                                        </p>
+                                                        <p class="text-muted">
+                                                            @history.Created
+                                                        </p>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>You have no notifications</li>
+                                    }
                                 </ul>
                             </li>
-                            <li>
-                                <a href="#settings" class="btn-rotate">
-                                    <i class="ti-settings"></i>
-                                    <p class="hidden-md hidden-lg">
-                                        Settings
-                                    </p>
-                                </a>
-                            </li>
+                            @*<li>
+                                    <a href="#settings" class="btn-rotate">
+                                        <i class="ti-settings"></i>
+                                        <p class="hidden-md hidden-lg">
+                                            Settings
+                                        </p>
+                                    </a>
+                                </li>*@
                         </ul>
-                    </div>*@
+                    </div>
                 </div>
             </nav>
             <div class="content">

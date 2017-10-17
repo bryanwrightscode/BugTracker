@@ -2,184 +2,263 @@
 @{
     ViewBag.Title = "Details";
 }
-
-<div class="col-lg-6">
-    <a href="@Url.Action("Index", "Tickets")" class="btn btn-wd btn-default btn-fill btn-move-left" style="margin-bottom: 20px;">
-        <span class="btn-label">
-            <i class="ti-angle-left"></i>
-        </span>
-        Back
-    </a>
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">@Model.Ticket.Title</h4>
-            <p class="category">Submitter: @Model.Ticket.OwnerUser.FullName</p>
-        </div>
-        <div class="card-content">
-            <p class="category">Description: @Html.Raw(Model.Ticket.Description)</p><br />
-            <p class="category">
-                Assignee:
-                @if (Model.Ticket.AssignToUserId == null)
+<a href="@Url.Action("Index", "Tickets")" class="btn btn-wd btn-default btn-fill btn-move-left" style="margin-bottom: 20px;">
+    <span class="btn-label">
+        <i class="ti-angle-left"></i>
+    </span>
+    Back
+</a>
+<div class="row">
+    <!-- History Column -->
+    <div class="col-lg-4 col-sm-6">
+        <!-- Ticket Card -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">@Model.Ticket.Title</h4>
+                <p class="category">Submitter: @Model.Ticket.OwnerUser.FullName</p>
+            </div>
+            <div class="card-content">
+                <p class="category">Description: @Html.Raw(Model.Ticket.Description)</p><br />
+                <p class="category">
+                    Assignee:
+                    @if (Model.Ticket.AssignToUserId == null)
             {
-                    @Html.Raw("No asignee");
+                        @Html.Raw("No asignee");
             }
             else
             {
-                    @Html.Raw(Model.Ticket.AssignToUser.FullName)
-                }
-            </p><br />
-            <p class="category">Status: @Html.Raw(Model.Ticket.TicketStatus.Name)</p><br />
-            <p class="category">Priority: @Html.Raw(Model.Ticket.TicketPriority.Name)</p><br />
-            <p class="category">Type: @Html.Raw(Model.Ticket.TicketType.Name)</p><br />
-            <p class="category">Project: @Html.Raw(Model.Ticket.Project.Title)</p><br />
-        </div>
-        <div class="card-footer">
-            <p class="category">Created: @Html.Raw(Model.Ticket.Created.ToString())</p>
-            <p class="category">Updated: @Html.Raw(Model.Ticket.Updated.ToString())</p>
-        </div>
-    </div>
-    <div class="card card-chat">
-        <div class="card-header">
-            <h4 class="card-title">Comments</h4>
-        </div>
-        <div class="card-content">
-            <ol class="chat">
-                @foreach (var comment in Model.TicketComments)
-                {
-                    if (comment.AuthorId == Model.User.Id)
-                    {
-                        <li class="self">
-                            <div class="msg">
-                                <p>@comment.Author.FullName:</p>
-                                <p>
-                                    @comment.Body
-                                </p>
-                                <div class="card-footer">
-                                    <h6>@comment.Created</h6>
-                                    @if (comment.Updated != null)
-                                    {
-                                        <h6>Edited</h6>
-                                    }
-                                </div>
-                            </div>
-                        </li>
+                        @Html.Raw(Model.Ticket.AssignToUser.FullName)
                     }
-                    else
+                </p><br />
+                <p class="category">Status: @Html.Raw(Model.Ticket.TicketStatus.Name)</p><br />
+                <p class="category">Priority: @Html.Raw(Model.Ticket.TicketPriority.Name)</p><br />
+                <p class="category">Type: @Html.Raw(Model.Ticket.TicketType.Name)</p><br />
+                <p class="category">Project: @Html.Raw(Model.Ticket.Project.Title)</p><br />
+            </div>
+            <div class="card-footer">
+                <p class="category">Created: @Html.Raw(Model.Ticket.Created.ToString())</p>
+                <p class="category">Updated: @Html.Raw(Model.Ticket.Updated.ToString())</p>
+            </div>
+        </div>
+        <!-- Comments Card -->
+        <div class="card card-chat">
+            <div class="card-header">
+                <h4 class="card-title">Comments</h4>
+            </div>
+            <div class="card-content">
+                <ol class="chat">
+                    @foreach (var comment in Model.TicketComments)
                     {
-                        <li class="other">
-                            <div class="msg">
-                                <p>@comment.Author.FullName:</p>
-                                <p>
-                                    @comment.Body
-                                </p>
-                                <div class="card-footer">
-                                    <h6>@comment.Created</h6>
-                                    @if (comment.Updated != null)
-                                    {
-                                        <h6>Edited</h6>
-                                    }
+                        if (comment.AuthorId == Model.User.Id)
+                        {
+                            <li class="self">
+                                <div class="msg">
+                                    <p>@comment.Author.FullName:</p>
+                                    <p>
+                                        @comment.Body
+                                    </p>
+                                    <div class="card-footer">
+                                        <h6>@comment.Created</h6>
+                                        @if (comment.Updated != null)
+                                        {
+                                            <h6>Edited</h6>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="other">
+                                <div class="msg">
+                                    <p>@comment.Author.FullName:</p>
+                                    <p>
+                                        @comment.Body
+                                    </p>
+                                    <div class="card-footer">
+                                        <h6>@comment.Created</h6>
+                                        @if (comment.Updated != null)
+                                        {
+                                            <h6>Edited</h6>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                        }
                     }
-                }
-            </ol>
-            <hr>
-            <div class="send-message">
-                @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
-                {
-                    <div class="form-group">
-                        @Html.Hidden("Ticket.Id", Model.Ticket.Id)
-                        @Html.TextBoxFor(m => m.TicketComment.Body, new { @class = "form-control text-area", placeholder = "Add new comment", style = "width: calc(100% - 132px); display: inline-block;" })
-                        <div class="send-button">
-                            <button class="btn btn-info btn-fill" type="submit">Send</button>
+                </ol>
+                <hr>
+                <div class="send-message">
+                    @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            @Html.Hidden("Ticket.Id", Model.Ticket.Id)
+                            @Html.TextBoxFor(m => m.TicketComment.Body, new { @class = "form-control text-area", placeholder = "Add new comment", style = "width: calc(100% - 132px); display: inline-block;" })
+                            <div class="send-button">
+                                <button class="btn btn-info btn-fill" type="submit">Send</button>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="col-lg-4">
-    <div class="collapse" id="fileUpload">
-        <div class="card">
-            @using (Html.BeginForm("Create", "Attachments", FormMethod.Post, new { enctype = "Multipart/form-data", @class = "form-horizontal" }))
+    <!-- Other Information Column -->
+    <div class="col-lg-8 col-sm-6">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <!-- History Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Ticket History</h4>
+                    </div>
+                    <div class="card-content">
+                        <ul class="list-unstyled">
+                            @foreach (var history in Model.TicketHistories.Take(10))
+                            {
+                                <li>
+                                    <div class="row">
+                                        <div class="col-xs-1">
+                                            @if (history.PropertyId == 34)
+                                            {
+                                                <p class="text-center text-info">
+                                                    <i class="ti-user"></i>
+                                                </p>
+                                            }
+                                            @if (history.PropertyId == 36)
+                                            {
+                                                <p class="text-center text-info">
+                                                    <i class="ti-comment"></i>
+                                                </p>
+                                            }
+                                            @if (history.PropertyId == 15)
+                                            {
+                                                <p class="text-center text-info">
+                                                    <i class="ti-plus"></i>
+                                                </p>
+                                            }
+                                            @if (history.PropertyId == 29 || history.PropertyId == 30 || history.PropertyId == 31 || history.PropertyId == 32 || history.PropertyId == 33)
+                                            {
+                                                <p class="text-center text-info">
+                                                    <i class="ti-receipt"></i>
+                                                </p>
+                                            }
+                                            @if (history.PropertyId == 35)
+                                            {
+                                                <p class="text-center text-info">
+                                                    <i class="ti-file"></i>
+                                                </p>
+                                            }
+                                        </div>
+                                        <div class="col-xs-11">
+                                            <p style="margin-bottom: -3px">
+                                                @if (history.OldValue != null && history.NewValue != null)
+                                                {
+                                                    @(String.Format("{0} {1} {2} from {3} to {4}", history.Author.FirstName, history.Action.Name.ToLower(),
+                                            history.Property.Name.ToLower(), history.OldValue, history.NewValue))
+                                                }
+                                                @if (history.OldValue == null && history.NewValue != null)
+                                                {
+                                                    @(String.Format("{0} {1} {2} {3}", history.Author.FirstName, history.Action.Name.ToLower(),
+                                            history.Property.Name.ToLower(), history.NewValue))
+                                                }
+                                            </p>
+                                            <p class="text-muted">
+                                                @history.Created
+                                            </p>
+
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <!-- Attachment Upload Card-->
+                <div class="collapse" id="fileUpload">
+                    <div class="card">
+                        @using (Html.BeginForm("Create", "Attachments", FormMethod.Post, new { enctype = "Multipart/form-data", @class = "form-horizontal" }))
             {
-                <div class="card-header">
-                    <h4 class="card-title">Add a File</h4>
+                            <div class="card-header">
+                                <h4 class="card-title">Add a File</h4>
+                            </div>
+                            <div class="card-content">
+                                @Html.Hidden("Id", Model.Ticket.Id)
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.File, htmlAttributes: new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        <input name="File" type="file" class="form-control" />
+                                        @Html.ValidationMessageFor(m => m.File, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Description, htmlAttributes: new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(m => m.Description, new { @class = "form-control text-area", placeholder = "Add a description here" })
+                                        @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-group">
+                                    <label class="col-md-3"></label>
+                                    <div class="col-md-9">
+                                        <button class="btn btn-info btn-fill" type="submit">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
-                <div class="card-content">
-                    @Html.Hidden("Id", Model.Ticket.Id)
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.File, htmlAttributes: new { @class = "col-md-3 control-label" })
-                        <div class="col-md-9">
-                            <input name="File" type="file" class="form-control" />
-                            @Html.ValidationMessageFor(m => m.File, "", new { @class = "text-danger" })
+                <!-- Attachment List Card-->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-xs-7"><h4 class="card-title">Attachments</h4></div>
+                            <div class="col-xs-5">
+                                <div class="pull-right">
+                                    <button class="btn btn-success btn-fill btn-icon btn-sm" type="button" data-toggle="collapse" data-target="#fileUpload" aria-expanded="false" aria-controls="file-upload">
+                                        <i class="ti-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Description, htmlAttributes: new { @class = "col-md-3 control-label" })
-                        <div class="col-md-9">
-                            @Html.TextBoxFor(m => m.Description, new { @class = "form-control text-area", placeholder = "Add a description here" })
-                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="form-group">
-                        <label class="col-md-3"></label>
-                        <div class="col-md-9">
-                            <button class="btn btn-info btn-fill" type="submit">Upload</button>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-xs-7"><h4 class="card-title">Attachments</h4></div>
-                <div class="col-xs-5">
-                    <div class="pull-right">
-                        <button class="btn btn-success btn-fill btn-icon btn-sm" type="button" data-toggle="collapse" data-target="#fileUpload" aria-expanded="false" aria-controls="file-upload">
-                            <i class="ti-plus"></i>
-                        </button>
+                    <div class="card-content">
+                        <ul class="list-unstyled">
+                            @foreach (var attachment in Model.TicketAttachments)
+                            {
+                                <li>
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <div class="icon-big icon-info text-center">
+                                                <i class="ti-file"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            @Html.Raw(attachment.FileName)
+                                            @if (attachment.Description != null)
+                                            {
+                                                <p>@Html.Raw(attachment.Description)</p>
+                                            }
+                                            <span class="text-muted">@Html.Raw(attachment.Created.ToString())</span>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="pull-right">
+                                                <a class="btn btn-icon btn-fill btn-default btn-sm" href="@Html.Raw(attachment.FileUrl)" target="_blank">
+                                                    <i class="ti-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-content">
-            <ul class="list-unstyled">
-                @foreach (var attachment in Model.TicketAttachments)
-                {
-                    <li>
-                        <div class="row">
-                            <div class="col-xs-3">
-                                <div class="icon-big icon-info text-center">
-                                    <i class="ti-file"></i>
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                @if (attachment.Description != null)
-                                {
-                                    <p>@Html.Raw(attachment.Description)</p>
-                                }
-                                <span class="text-muted">@Html.Raw(attachment.Created.ToString())</span>
-                            </div>
-                            <div class="col-xs-3">
-                                <div class="pull-right">
-                                    <a class="btn btn-icon btn-fill btn-default btn-sm" href="@Html.Raw(attachment.FileUrl)" target="_blank">
-                                        <i class="ti-download"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                }
-            </ul>
-        </div>
     </div>
-
-
 </div>

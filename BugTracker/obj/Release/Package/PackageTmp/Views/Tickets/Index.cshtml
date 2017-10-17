@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BugTracker.Models.CodeFirst.Ticket>
+﻿@model BugTracker.Models.TicketsIndexViewModel
 @{
     ViewBag.Title = "Tickets";
 }
@@ -12,6 +12,7 @@
                         <tr>
                             <th>Ticket</th>
                             <th>Created</th>
+                            <th>Updated</th>
                             <th>Assignee</th>
                             <th>Submitter</th>
                             <th>Project</th>
@@ -22,51 +23,61 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model)
+                        @if (Model.Tickets != null && Model.Tickets.Count > 0)
                         {
-                            <tr>
-                                <td>
-                                    <a href="@Url.Action("Details", "Tickets", new { id = item.Id })">
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </a>
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Created)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.AssignToUser.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Project.Title)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketType.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-                                </td>
-                                <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                                </td>
-                            </tr>
+                            foreach (var item in Model.Tickets)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("Details", "Tickets", new { id = item.Id })">
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy H:mm")
+                                    </td>
+                                    <td>
+                                        @if (item.Updated.HasValue)
+                                        {
+                                            @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy H:mm")
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AssignToUser.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Project.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    @if (Request.IsAuthenticated && User.IsInRole("Submitter"))
+    @if (Request.IsAuthenticated && User.IsInRole("Submitter") && Model.HasProjects == true)
     {
         <a class="btn btn-icon btn-fill btn-success" href="@Url.Action("Create", "Tickets")" style="margin-bottom: 20px;">
             <i class="ti-plus"></i>
         </a>
     }
+
 </div>
 @section Scripts {
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -74,5 +85,6 @@
     <script>
         $(document).ready(function () { $('#tickets').DataTable(); });
     </script>
+
 }
 

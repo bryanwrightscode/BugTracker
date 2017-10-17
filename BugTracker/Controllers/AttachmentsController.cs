@@ -1,11 +1,13 @@
 ﻿using BugTracker.Models;
 using BugTracker.Models.CodeFirst;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -16,7 +18,7 @@ namespace BugTracker.Controllers
     public class AttachmentsController : ApplicationBaseController
     {
         [HttpPost]
-        public ActionResult Create(TicketAttachmentEditModel em)
+        public async Task<ActionResult> Create(TicketAttachmentEditModel em)
         {
             if (ModelState.IsValid)
             {
@@ -57,6 +59,7 @@ namespace BugTracker.Controllers
                         history.IsNotification = true;
                         history.DeveloperId = ticket.AssignToUserId;
                         db.Users.Find(history.DeveloperId).Histories.Add(history);
+                        await SendEditEmail(ticket.AssignToUserId, ticket.Id);
                     }
                     else
                     {
@@ -67,6 +70,27 @@ namespace BugTracker.Controllers
                 }
             }
             return RedirectToAction("Details", "Tickets", new { id = em.Id });
+        }
+        public async Task SendEditEmail(string userId, int ticketId)
+        {
+            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+            // Send an email with this link
+            var callbackUrl = Url.Action("Details", "Tickets", new { id = ticketId }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(userId, "Ticket Attachment", "A <a href=\"" + callbackUrl + "\">ticket</a> you were assigned has a new attachment.");
+        }
+
+        private ApplicationUserManager _userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
         }
     }
 }

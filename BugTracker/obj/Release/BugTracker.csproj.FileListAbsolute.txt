@@ -118,3 +118,9 @@ C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.dll
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.pdb
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\AutoMapper.dll
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\AutoMapper.xml
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.Migrations.AddTicketHistoryProperties.resources
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.csproj.GenerateResource.Cache

@@ -50,10 +50,13 @@
                                     {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Created)
+                                            @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Updated)
+                                            @if (item.Updated.HasValue)
+                                            {
+                                                @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
+                                            }
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Title)
@@ -126,10 +129,13 @@
                                         {
                                             <tr class="@(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "success" : "")">
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.Created)
+                                                    @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.Updated)
+                                                    @if (item.Updated.HasValue)
+                                                    {
+                                                        @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
+                                                    }
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Title)
@@ -188,6 +194,13 @@
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
     <script>
-        $(document).ready(function () { $('#Assigned').DataTable(); $('#All').DataTable(); });
+        $(document).ready(function () {
+            $('#Assigned').DataTable({
+                "order": [[0, "desc"]]
+            });
+            $('#All').DataTable({
+                "order": [[0, "desc"]]
+            });
+        });
     </script>
 }

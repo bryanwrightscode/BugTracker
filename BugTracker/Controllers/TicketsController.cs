@@ -52,7 +52,7 @@ namespace BugTracker.Controllers
             }
             else if (User.IsInRole("Submitter"))
             {
-                ticketHelper.ListSubTickets(User.Identity.GetUserId()).ToList();
+                vm.Tickets = ticketHelper.ListSubTickets(User.Identity.GetUserId()).ToList();
                 if (db.Users.Find(userId).Projects.Count > 0)
                 {
                     vm.HasProjects = true;
@@ -194,6 +194,15 @@ namespace BugTracker.Controllers
                     vm.StatusList = new SelectList(db.TicketStatuses, "Id", "Name", vm.TicketStatusId);
                     vm.TypeList = new SelectList(db.TicketTypes, "Id", "Name", vm.TicketTypeId);
                     vm.PriorityList = new SelectList(db.TicketPriorities, "Id", "Name", vm.TicketPriorityId);
+                    vm.AssignToUserId = ticket.AssignToUserId;
+                    if (roleHelper.ListRoleUsers("Developer").Where(u => helper.UserIsOnProject(u.Id, ticket.ProjectId)).Count() > 0)
+                    {
+                        vm.AssignToUserList = new SelectList(roleHelper.ListRoleUsers("Developer").Where(u => helper.UserIsOnProject(u.Id, ticket.ProjectId)), "Id", "FullName", vm.AssignToUserId);
+                    }
+                    else
+                    {
+                        vm.AssignToUserList = null;
+                    }
                     return View(vm);
                 }
                 if (User.IsInRole("Developer") && ticket.AssignToUserId == user.Id)
@@ -345,6 +354,14 @@ namespace BugTracker.Controllers
                             db.SaveChanges();
                         }
                     }
+                    if (histories.Count() > 0 && (vm.AssignToUserId != null && ticket.AssignToUserId != null))
+                    {
+                        await SendEditEmail(vm.AssignToUserId, ticket.Id);
+                    }
+                    if (histories.Count() > 0 && ticket.AssignToUserId != null && vm.AssignToUserId == null)
+                    {
+                        await SendEditEmail(ticket.AssignToUserId, ticket.Id);
+                    }
 
                     return RedirectToAction("Details", new { id = vm.Id });
                 }
@@ -387,6 +404,14 @@ namespace BugTracker.Controllers
             // Send an email with this link
             var callbackUrl = Url.Action("Details", "Tickets", new { id = ticketId }, protocol: Request.Url.Scheme);
             await UserManager.SendEmailAsync(userId, "You were assigned to a ticket", "you were assigned to a <a href=\"" + callbackUrl + "\">ticket</a>");
+        }
+
+        public async Task SendEditEmail(string userId, int ticketId)
+        {
+            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+            // Send an email with this link
+            var callbackUrl = Url.Action("Details", "Tickets", new { id = ticketId }, protocol: Request.Url.Scheme);
+            await UserManager.SendEmailAsync(userId, "Ticket Edited", "A <a href=\"" + callbackUrl + "\">ticket</a> you were assigned to has been edited.");
         }
 
         private ApplicationUserManager _userManager;

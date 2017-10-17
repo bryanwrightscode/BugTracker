@@ -40,7 +40,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        @Html.ActionLink("Register", "Register")
+                        @Html.ActionLink("Register", "Register", new { ReturnUrl = ViewBag.ReturnUrl })
+                    </li>
+                    <li>
+                        @Html.ActionLink("Demo", "Landing", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, null)
                     </li>
                 </ul>
             </div>
