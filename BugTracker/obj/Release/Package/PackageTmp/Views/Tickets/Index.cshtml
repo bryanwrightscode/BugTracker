@@ -34,12 +34,12 @@
                                         </a>
                                     </td>
                                     <td>
-                                        @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy H:mm")
+                                        @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                     </td>
                                     <td>
                                         @if (item.Updated.HasValue)
                                         {
-                                            @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy H:mm")
+                                            @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                         }
                                     </td>
                                     <td>
@@ -83,7 +83,11 @@
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
     <script>
-        $(document).ready(function () { $('#tickets').DataTable(); });
+        $(document).ready(function () {
+            $('#tickets').DataTable({
+                "order": [[1, "desc"]]
+            });
+        });
     </script>
 
 }

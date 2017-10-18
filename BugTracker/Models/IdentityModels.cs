@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using BugTracker.Models.CodeFirst;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System;
 
 namespace BugTracker.Models
 {
@@ -22,8 +23,13 @@ namespace BugTracker.Models
                 return FirstName + " " + LastName;
             }
         }
+        public bool IsDemo { get; set; }
         public string TimeZone { get; set; }
         public bool PowerUser { get; set; }
+        public string ProfilePictureFileName { get; set; }
+        public string ProfilePictureFileUrl { get; set; }
+        public DateTimeOffset ProfilePictureCreated { get; set; }
+
         public ApplicationUser()
         {
             Projects = new HashSet<Project>();
@@ -68,6 +74,5 @@ namespace BugTracker.Models
         public DbSet<TicketPriority> TicketPriorities { get; set; }
         public DbSet<TicketHistoryProperty> TicketHistoryProperties { get; set; }
         public DbSet<TicketHistoryAction> TicketHistoryActions { get; set; }
-        //public System.Data.Entity.DbSet<BugTracker.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

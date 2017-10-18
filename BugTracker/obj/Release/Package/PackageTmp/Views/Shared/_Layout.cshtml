@@ -14,9 +14,11 @@
     <link href="~/Assets/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Assets/css/paper-dashboard.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/a970589202.js"></script>
+    <script src="~/Scripts/d3/d3.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet" rel="stylesheet" type="text/css" />
     <link href="~/Assets/css/themify-icons.css" rel="stylesheet" />
     <link href="~/Assets/css/multiselect.css" rel="stylesheet" />
+    <link href="~/Assets/css/custom.css" rel="stylesheet" />
 </head>
 <body>
     <div class="wrapper">
@@ -135,16 +137,16 @@
                                         <b class="caret"></b>
                                     </p>
                                 </a>
-                                <ul class="dropdown-menu" id="">
+                                <ul class="dropdown-menu" id="alerts-menu">
                                     @if (Model.IsNotificationHistories != null && Model.IsNotificationHistories.Count() > 0)
                                     {
                                         foreach (var history in Model.IsNotificationHistories)
                                         {
                                             if (history.IsClicked == false)
                                             {
-                                                <li class="list-group-item-success">
+                                                <li>
                                                     <a href="@Url.Action("UnclickAlert", "Tickets", new { id = history.Id })">
-                                                        <p style="margin-bottom: -3px">
+                                                        <p style="margin-bottom: -3px" class="text-info">
                                                             @if (history.OldValue != null && history.NewValue != null)
                                                             {
                                                                 @(String.Format("{0} {1} {2} from {3} to {4}", history.Author.FirstName, history.Action.Name.ToLower(),
@@ -157,11 +159,10 @@
                                                             }
                                                         </p>
                                                         <p class="text-muted">
-                                                            @history.Created
+                                                            @Html.ToUserTime(history.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                                         </p>
                                                     </a>
                                                 </li>
-                                                <li class="list-group-item-success"></li>
                                             }
                                             else
                                             {
@@ -180,7 +181,7 @@
                                                             }
                                                         </p>
                                                         <p class="text-muted">
-                                                            @history.Created
+                                                            @Html.ToUserTime(history.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                                         </p>
                                                     </a>
                                                 </li>
@@ -207,9 +208,7 @@
             </nav>
             <div class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        @RenderBody()
-                    </div>
+                    @RenderBody()
                 </div>
             </div>
             <footer class="footer">
@@ -268,6 +267,7 @@
     <script src="~/Assets/js/fullcalendar.min.js"></script>
     <!-- Paper Dashboard PRO Core javascript and methods for Demo purpose -->
     <script src="~/Assets/js/paper-dashboard.js"></script>
+    <script src="~/Scripts/Chart.min.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

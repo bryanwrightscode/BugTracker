@@ -48,6 +48,50 @@ namespace BugTracker.Controllers
             return View(projects);
         }
 
+        public ActionResult Details(int id)
+        {
+            ViewBag.active = "projects";
+            ProjectDetailViewModel vm = new ProjectDetailViewModel();
+            UserProjectHelper projectHelper = new UserProjectHelper();
+            UserRoleHelper roleHelper = new UserRoleHelper();
+            var user = db.Users.Find(User.Identity.GetUserId());
+            var project = db.Projects.Find(id);
+            if (project != null)
+            {
+                if (User.IsInRole("Admin") ||
+                    (User.IsInRole("ProjectManager") && projectHelper.UserIsOnProject(user.Id, project.Id)) ||
+                    (User.IsInRole("Developer") && project.Tickets.Any(t => t.AssignToUserId == user.Id)) ||
+                    (User.IsInRole("Submitter") && project.Tickets.Any(t => t.OwnerUserId == user.Id)))
+                {
+                    vm.Project = project;
+                    if (project.Users.Where(u => roleHelper.UserIsInRole(u.Id, "ProjectManager")).Count() > 0)
+                    {
+                        vm.ProjectManager = project.Users.Where(u => roleHelper.UserIsInRole(u.Id, "ProjectManager")).First().FullName;
+                    }
+                    if (project.Tickets.Count() > 0)
+                    {
+                        var titles = new List<string>();
+                        foreach (var ticket in project.Tickets.OrderBy(t => t.Title))
+                        {
+                            titles.Add(ticket.Title);
+                        }
+                        vm.Tickets = titles;
+                    }
+                    if (project.Users.Count() > 0)
+                    {
+                        var users = new List<string>();
+                        foreach (var name in project.Users.OrderBy(u => u.LastName))
+                        {
+                            users.Add(name.FullName);
+                        }
+                        vm.Users = users;
+                    }
+                    return View(vm);
+                }
+            }
+            return (RedirectToAction("Index"));
+        }
+
         //Get
         [Authorize(Roles = "Admin, ProjectManager")]
         public ActionResult Assign(int id)
@@ -123,7 +167,8 @@ namespace BugTracker.Controllers
         public ActionResult Create()
         {
             ViewBag.active = "projects";
-            return View();
+            CreateProjectViewModel vm = new CreateProjectViewModel();
+            return View(vm);
         }
 
         // POST: Projects/Create
@@ -154,17 +199,17 @@ namespace BugTracker.Controllers
         public ActionResult Edit(int? id)
         {
             ViewBag.active = "projects";
-
+            EditProjectViewModel vm = new EditProjectViewModel();
             if (id == null)
             {
                 return RedirectToAction("Index");
             }
-            Project project = db.Projects.Find(id);
-            if (project == null)
+            vm.Project = db.Projects.Find(id);
+            if (vm.Project == null)
             {
                 return RedirectToAction("Index");
             }
-            return View(project);
+            return View(vm);
         }
 
         // POST: Projects/Edit/5

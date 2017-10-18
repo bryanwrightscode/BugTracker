@@ -584,10 +584,13 @@
     <Content Include="Views\Tickets\CreateAlt.cshtml" />
     <Content Include="Views\Tickets\Details.cshtml" />
     <Content Include="Views\Home\Landing.cshtml" />
+    <Content Include="Views\Manage\AddProfilePicture.cshtml" />
+    <Content Include="Views\Projects\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Attachments\" />
+    <Folder Include="ProfilePictures\" />
     <Folder Include="Views\ApplicationBase\" />
     <Folder Include="Views\Attachments\" />
     <Folder Include="Views\Comments\" />

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using BugTracker.ViewModels;
+using System.Web;
 
 namespace BugTracker.Models
 {
@@ -11,6 +12,7 @@ namespace BugTracker.Models
         public bool HasPassword { get; set; }
         public string FullName { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
+        public string FileUrl { get; set; }
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
         public bool BrowserRemembered { get; set; }
@@ -97,5 +99,10 @@ namespace BugTracker.Models
     {
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
+    }
+
+    public class AddProfilePictureViewModel : ApplicationBaseViewModel
+    {
+        public HttpPostedFileBase File { get; set; }
     }
 }

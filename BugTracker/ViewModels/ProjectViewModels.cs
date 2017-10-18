@@ -38,4 +38,16 @@ namespace BugTracker.Models
         [StringLength(240, ErrorMessage = "The {0} must be at least {2} characters long", MinimumLength = 6)]
         public string Description  { get; set; }
     }
+
+    public class ProjectDetailViewModel : ApplicationBaseViewModel
+    {
+        public Project Project { get; set; }
+        public string ProjectManager { get; set; }
+        public ICollection<string> Tickets { get; set; }
+        public ICollection<string> Users { get; set; }
+    }
+    public class EditProjectViewModel : ApplicationBaseViewModel
+    {
+        public Project Project { get; set; }
+    }
 }

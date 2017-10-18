@@ -36,8 +36,16 @@
                 <p class="category">Project: @Html.Raw(Model.Ticket.Project.Title)</p><br />
             </div>
             <div class="card-footer">
-                <p class="category">Created: @Html.Raw(Model.Ticket.Created.ToString())</p>
-                <p class="category">Updated: @Html.Raw(Model.Ticket.Updated.ToString())</p>
+                <p class="category">
+                    Created:
+                    @Html.ToUserTime(Model.Ticket.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
+                </p>
+                <p class="category">
+                    Updated:
+                    @if (Model.Ticket.Updated.HasValue)
+                    {
+                        @Html.ToUserTime(Model.Ticket.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
+                    }
             </div>
         </div>
         <!-- Comments Card -->
@@ -51,39 +59,35 @@
                     {
                         if (comment.AuthorId == Model.User.Id)
                         {
-                            <li class="self">
-                                <div class="msg">
-                                    <p>@comment.Author.FullName:</p>
-                                    <p>
-                                        @comment.Body
-                                    </p>
-                                    <div class="card-footer">
-                                        <h6>@comment.Created</h6>
-                                        @if (comment.Updated != null)
-                                        {
-                                            <h6>Edited</h6>
-                                        }
-                                    </div>
-                                </div>
-                            </li>
+                    <li class="self">
+                        <div class="msg">
+                            <p>@comment.Author.FullName:</p>
+                            <p>
+                                @comment.Body
+                            </p>
+                            <div class="card-footer">
+                                <h6>
+                                    @Html.ToUserTime(comment.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
+                                </h6>
+                            </div>
+                        </div>
+                    </li>
                         }
                         else
                         {
-                            <li class="other">
-                                <div class="msg">
-                                    <p>@comment.Author.FullName:</p>
-                                    <p>
-                                        @comment.Body
-                                    </p>
-                                    <div class="card-footer">
-                                        <h6>@comment.Created</h6>
-                                        @if (comment.Updated != null)
-                                        {
-                                            <h6>Edited</h6>
-                                        }
-                                    </div>
-                                </div>
-                            </li>
+                    <li class="other">
+                        <div class="msg">
+                            <p>@comment.Author.FullName:</p>
+                            <p>
+                                @comment.Body
+                            </p>
+                            <div class="card-footer">
+                                <h6>
+                                    @Html.ToUserTime(comment.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
+                                </h6>
+                            </div>
+                        </div>
+                    </li>
                         }
                     }
                 </ol>
@@ -91,13 +95,13 @@
                 <div class="send-message">
                     @using (Html.BeginForm("Create", "Comments", FormMethod.Post))
                     {
-                        <div class="form-group">
-                            @Html.Hidden("Ticket.Id", Model.Ticket.Id)
-                            @Html.TextBoxFor(m => m.TicketComment.Body, new { @class = "form-control text-area", placeholder = "Add new comment", style = "width: calc(100% - 132px); display: inline-block;" })
-                            <div class="send-button">
-                                <button class="btn btn-info btn-fill" type="submit">Send</button>
-                            </div>
+                    <div class="form-group">
+                        @Html.Hidden("Ticket.Id", Model.Ticket.Id)
+                        @Html.TextBoxFor(m => m.TicketComment.Body, new { @class = "form-control text-area", placeholder = "Add new comment", style = "width: calc(100% - 132px); display: inline-block;" })
+                        <div class="send-button">
+                            <button class="btn btn-info btn-fill" type="submit">Send</button>
                         </div>
+                    </div>
                     }
                 </div>
             </div>
@@ -164,7 +168,7 @@
                                                 }
                                             </p>
                                             <p class="text-muted">
-                                                @history.Created
+                                                @Html.ToUserTime(history.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                             </p>
 
                                         </div>
@@ -230,30 +234,30 @@
                         <ul class="list-unstyled">
                             @foreach (var attachment in Model.TicketAttachments)
                             {
-                                <li>
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <div class="icon-big icon-info text-center">
-                                                <i class="ti-file"></i>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-6">
-                                            @Html.Raw(attachment.FileName)
-                                            @if (attachment.Description != null)
-                                            {
-                                                <p>@Html.Raw(attachment.Description)</p>
-                                            }
-                                            <span class="text-muted">@Html.Raw(attachment.Created.ToString())</span>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <div class="pull-right">
-                                                <a class="btn btn-icon btn-fill btn-default btn-sm" href="@Html.Raw(attachment.FileUrl)" target="_blank">
-                                                    <i class="ti-download"></i>
-                                                </a>
-                                            </div>
+                            <li>
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <div class="icon-big icon-info text-center">
+                                            <i class="ti-file"></i>
                                         </div>
                                     </div>
-                                </li>
+                                    <div class="col-xs-6">
+                                        @Html.Raw(attachment.FileName)
+                                        @if (attachment.Description != null)
+                                            {
+                                            <p>@Html.Raw(attachment.Description)</p>
+                                            }
+                                        <span class="text-muted">@Html.ToUserTime(attachment.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")</span>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="pull-right">
+                                            <a class="btn btn-icon btn-fill btn-default btn-sm" href="@Html.Raw(attachment.FileUrl)" target="_blank">
+                                                <i class="ti-download"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                             }
                         </ul>
                     </div>

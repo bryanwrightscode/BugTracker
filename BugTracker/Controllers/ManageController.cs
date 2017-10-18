@@ -9,6 +9,8 @@ using Microsoft.Owin.Security;
 using BugTracker.Models;
 using BugTracker.Models.Helpers;
 using System.Data.Entity;
+using System.IO;
+using BugTracker.Models.CodeFirst;
 
 namespace BugTracker.Controllers
 {
@@ -70,6 +72,7 @@ namespace BugTracker.Controllers
             {
                 HasPassword = HasPassword(),
                 FullName = db.Users.Find(userId).FullName,
+                FileUrl = db.Users.Find(userId).ProfilePictureFileUrl,
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
@@ -220,7 +223,18 @@ namespace BugTracker.Controllers
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
-            return View();
+            if (!IsDemo(User.Identity.GetUserId()))
+            {
+                ChangePasswordViewModel vm = new ChangePasswordViewModel();
+                return View(vm);
+            }
+            else
+            {
+                if (Request.UrlReferrer == null)
+                    return RedirectToAction("Index", "Home");
+                else
+                    return Redirect(Request.UrlReferrer.ToString());
+            }
         }
 
         //
@@ -229,29 +243,43 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (IsDemo(User.Identity.GetUserId()))
+                return RedirectToAction("Index", "Home");
+            else
             {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+                var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    if (user != null)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    }
+                    return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                }
+                AddErrors(result);
                 return View(model);
             }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
-            {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
-            }
-            AddErrors(result);
-            return View(model);
         }
 
         //
         // GET: /Manage/ChangeName
         public ActionResult ChangeName()
         {
-            return View();
+            if (IsDemo(User.Identity.GetUserId()))
+                if (Request.UrlReferrer == null)
+                    return RedirectToAction("Index", "Home");
+                else
+                    return Redirect(Request.UrlReferrer.ToString());
+            else
+            {
+                ChangeNameViewModel vm = new ChangeNameViewModel();
+                return View(vm);
+            }
         }
 
         //
@@ -260,23 +288,28 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangeName(ChangeNameViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (IsDemo(User.Identity.GetUserId()))
+                return RedirectToAction("Index", "Home");
+            else
             {
-                return View(model);
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                //var user = db.Users.Find(User.Identity.GetUserId());
+                //user.FirstName = model.FirstName;
+                //user.LastName = model.LastName;
+                //db.Entry(user).State = EntityState.Modified;
+                //db.SaveChanges();
+
+                var user = UserManager.FindById(User.Identity.GetUserId());
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                UserManager.Update(user);
+
+                return RedirectToAction("Index", new { Message = "Name changed" });
             }
-
-            //var user = db.Users.Find(User.Identity.GetUserId());
-            //user.FirstName = model.FirstName;
-            //user.LastName = model.LastName;
-            //db.Entry(user).State = EntityState.Modified;
-            //db.SaveChanges();
-
-            var user = UserManager.FindById(User.Identity.GetUserId());
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            UserManager.Update(user);
-
-            return RedirectToAction("Index", new { Message = "Name changed" });
         }
 
         //
@@ -315,23 +348,28 @@ namespace BugTracker.Controllers
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
-            ViewBag.StatusMessage =
+            if (IsDemo(User.Identity.GetUserId()))
+                return RedirectToAction("Index", "Home");
+            else
+            {
+                ViewBag.StatusMessage =
                 message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : "";
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user == null)
-            {
-                return View("Error");
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user == null)
+                {
+                    return View("Error");
+                }
+                var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
+                var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
+                ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
+                return View(new ManageLoginsViewModel
+                {
+                    CurrentLogins = userLogins,
+                    OtherLogins = otherLogins
+                });
             }
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
-            var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
-            ViewBag.ShowRemoveButton = user.PasswordHash != null || userLogins.Count > 1;
-            return View(new ManageLoginsViewModel
-            {
-                CurrentLogins = userLogins,
-                OtherLogins = otherLogins
-            });
         }
 
         //
@@ -357,6 +395,61 @@ namespace BugTracker.Controllers
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
 
+        public ActionResult AddProfilePicture()
+        {
+            if (IsDemo(User.Identity.GetUserId()))
+                if (Request.UrlReferrer == null)
+                    return RedirectToAction("Index", "Home");
+                else
+                    return Redirect(Request.UrlReferrer.ToString());
+            else
+            {
+                AddProfilePictureViewModel vm = new AddProfilePictureViewModel();
+                return View(vm);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddProfilePicture(AddProfilePictureViewModel em)
+        {
+            if (IsDemo(User.Identity.GetUserId()))
+                return RedirectToAction("Index", "Home");
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = db.Users.Find(User.Identity.GetUserId());
+                    if (em.File != null && em.File.ContentLength > 0)
+                    {
+                        var ext = Path.GetExtension(em.File.FileName).ToLower();
+                        if (ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".gif")
+                        {
+                            ModelState.AddModelError("File", "Invalid file format");
+                        }
+                    }
+                    if (em.File != null)
+                    {
+                        if (user.ProfilePictureFileUrl != null)
+                        {
+                            var deletePath = Server.MapPath("~" + user.ProfilePictureFileUrl);  //DELETES IMAGE FROM FOLDER
+                            System.IO.File.Delete(deletePath);
+                            user.ProfilePictureFileUrl = null;
+                        }
+                        var filePath = "/ProfilePictures/";
+                        var absPath = Server.MapPath("~" + filePath);
+                        user.ProfilePictureFileName = em.File.FileName;
+                        user.ProfilePictureFileUrl = filePath + em.File.FileName;
+                        em.File.SaveAs(Path.Combine(absPath, em.File.FileName));
+                        user.ProfilePictureCreated = DateTimeOffset.Now;
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Manage");
+                    }
+                }
+                return RedirectToAction("Index", "Manage");
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -369,6 +462,22 @@ namespace BugTracker.Controllers
         }
 
         #region Helpers
+        private bool IsDemo(string userId)
+        {
+            if (db.Users.Find(userId).IsDemo == true)
+                return true;
+            else
+                return false;
+        }
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
