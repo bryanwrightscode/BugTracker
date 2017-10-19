@@ -1,0 +1,77 @@
+﻿@model BugTracker.Models.ProjectDetailViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-4 col-sm-6">
+        <!-- Project Card -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">@Model.Project.Title</h4>
+                <p class="category">@Model.Project.Description</p>
+                <p class="category text-right">Created @Html.ToUserTime(Model.Project.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")</p>
+            </div>
+            <hr />
+            <div class="card-content">
+
+                <div class="row">
+                    <div class="col-sm-3"><p class="text-right">Project Manager:</p></div>
+                    <div class="col-sm-9">
+                        <p>
+                            @if (Model.ProjectManager != null)
+                            {
+                                @Model.ProjectManager
+                            }
+                        </p>
+                    </div>
+                </div>
+
+                @if (Model.Project.Updated.HasValue)
+                {
+                    <div class="row">
+                        <div class="col-sm-3"><p class="text-right">Updated:</p></div>
+                        <div class="col-sm-9"><p>@Html.ToUserTime(Model.Project.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")</p></div>
+                    </div>
+                }
+
+                <div class="row">
+                    <div class="col-sm-3"><p class="text-right">Users:</p></div>
+                    <div class="col-sm-9">
+                        @if (Model.Users != null)
+                        {
+                            <ul class="list-inline">
+                                @foreach (var user in Model.Users)
+                                {
+                                    <li><span class="label label-primary">@Html.Raw(user)</span></li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><p class="text-right">Tickets:</p></div>
+                    <div class="col-sm-9">
+                        @if (Model.Tickets != null)
+                        {
+                            <ul class="list-inline">
+                                @foreach (var ticket in Model.Tickets)
+                                {
+                                    <li><span class="label label-primary">@Html.Raw(ticket)</span></li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Other Information Column -->
+    <div class="col-lg-8 col-sm-6">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+            </div>
+        </div>
+    </div>
+</div>

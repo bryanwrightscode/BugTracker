@@ -124,3 +124,4 @@ C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\Microsoft.AspNet.SignalR.C
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.Migrations.AddTicketHistoryProperties.resources
 C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.csproj.GenerateResource.Cache
+C:\Users\Bryan\source\repos\BugTracker\BugTracker\obj\Release\BugTracker.csprojResolveAssemblyReference.cache

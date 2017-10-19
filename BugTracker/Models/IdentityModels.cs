@@ -42,6 +42,7 @@ namespace BugTracker.Models
         public virtual ICollection<TicketHistory> Histories { get; set; }
         public virtual ICollection<TicketComment> Comments { get; set; }
         public virtual ICollection<TicketAttachment> Attachments { get; set; }
+        public virtual ICollection<Ticket> Tickets { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

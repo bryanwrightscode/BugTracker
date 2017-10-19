@@ -21,6 +21,7 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="assigned">
 
+                    <!--Assigned Projects-->
                     @if (Model.Assigned.Count() > 0)
                     {
                         <div class="fresh-datatables">
@@ -102,6 +103,7 @@
                 {
                     <div role="tabpanel" class="tab-pane" id="all">
 
+                        <!--All Projects-->
                         @if (Model.All.Count > 0)
                         {
                             <div class="fresh-datatables">
@@ -161,7 +163,7 @@
                                                     }
                                                 </td>
                                                 <td>
-                                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
+                                                    @if (Request.IsAuthenticated && (User.IsInRole("Admin")))
                                                     {
                                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
                                                         @Html.ActionLink("Assign", "Assign", new { id = item.Id })
