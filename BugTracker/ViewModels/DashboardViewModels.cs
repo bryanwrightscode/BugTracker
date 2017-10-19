@@ -22,5 +22,12 @@ namespace BugTracker.Models
         public string[] UserRole { get; set; }
         public ICollection<string> ChartJsLables { get; set; }
         public ICollection<int> ChartJsValues { get; set; }
+        public virtual Chart TicketStatusChart { get; set; }
+    }
+
+    public class Chart
+    {
+        public ICollection<string> Labels { get; set; }
+        public ICollection<int> Values { get; set; }
     }
 }

@@ -46,7 +46,7 @@ namespace BugTracker.Controllers
             dashItems.UserRole = roleHelper.ListUserRoles(user.Id).ToArray();
             dashItems.ChartJsLables = new List<string>();
             dashItems.ChartJsValues = new List<int>();
-            var projects = db.Projects.ToList();
+            var projects = db.Projects.Where(p => p.Tickets.Count() > 0).ToList();
             foreach (var project in projects)
             {
                 dashItems.ChartJsLables.Add(project.Title);
@@ -54,6 +54,21 @@ namespace BugTracker.Controllers
             }
             dashItems.ChartJsLables = dashItems.ChartJsLables.ToArray();
             dashItems.ChartJsValues = dashItems.ChartJsValues.ToArray();
+
+
+            var ticketStatusChart = new Chart();
+            ticketStatusChart.Labels = new List<string>();
+            ticketStatusChart.Values = new List<int>();
+            var statuses = db.TicketStatuses.ToList();
+            foreach (var status in statuses)
+            {
+                ticketStatusChart.Labels.Add(status.Name);
+                ticketStatusChart.Values.Add(db.Tickets.Where(t => t.TicketStatus.Name == status.Name).Count());
+            }
+            dashItems.TicketStatusChart = ticketStatusChart;
+            dashItems.TicketStatusChart.Labels = ticketStatusChart.Labels.ToArray();
+            dashItems.TicketStatusChart.Values = ticketStatusChart.Values.ToArray();
+
 
             return View(dashItems);
         }
