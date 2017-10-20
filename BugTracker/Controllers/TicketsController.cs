@@ -359,7 +359,7 @@ namespace BugTracker.Controllers
                                     LinkTicketId = change.Ticket.Id,
                                     LinkAlertId = change.Id
                                 };
-                                hub.Clients.All.Send(NewAlert.DisplayAlert, String.Format("{0}/Tickets/UnclickAlert/{1}", Request.Url.Host, NewAlert.LinkAlertId));
+                                hub.Clients.All.Send(NewAlert.DisplayAlert, NewAlert.LinkAlertId);
                             }
                             if (change.OldValue == null && change.NewValue != null)
                             {
@@ -371,7 +371,7 @@ namespace BugTracker.Controllers
                                     LinkTicketId = change.Ticket.Id,
                                     LinkAlertId = change.Id
                                 };
-                                hub.Clients.All.Send(NewAlert.DisplayAlert, String.Format("{0}/Tickets/UnclickAlert/{1}", Request.Url.Host, NewAlert.LinkAlertId));
+                                hub.Clients.All.Send(NewAlert.DisplayAlert, NewAlert.LinkAlertId);
                             }
                         }
                         else

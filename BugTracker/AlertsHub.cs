@@ -12,9 +12,9 @@ namespace BugTracker
         {
             Clients.All.Broadcast(alert);
         }
-        public void Send(string alert, string url)
+        public void Send(string alert, int urlId)
         {
-            Clients.All.Broadcast(alert, url);
+            Clients.All.Broadcast(alert, urlId);
         }
     }
 }

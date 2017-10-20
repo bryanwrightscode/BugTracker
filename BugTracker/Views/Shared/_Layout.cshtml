@@ -338,10 +338,10 @@
             var number = parseInt($('#alerts-count').html());
             return number + 1;
         }
-        alerts.client.send = function (alert, url) {
+        alerts.client.send = function (alert, urlId) {
             console.log("first function");
             $('#alerts-empty-note').remove();
-            $('#alerts-menu').prepend('<li>' + '<a href="' + url + '"><p style="margin-bottom: -3px" class="text-info">' + alert + '</p><p class="text-muted">Now</p></a></li>');
+            $('#alerts-menu').prepend('<li>' + '<a href="/Tickets/UnclickAlert/' + urlId + '"><p style="margin-bottom: -3px" class="text-info">' + alert + '</p><p class="text-muted">Now</p></a></li>');
             $('#alerts-count').text(addOne());
         };
         $.connection.hub.start().done(function () {
