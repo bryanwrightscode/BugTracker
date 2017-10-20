@@ -179,56 +179,7 @@
                                             }
                                         }
                                     }
-                                    @*@if (Model.IsNotificationHistories != null && Model.IsNotificationHistories.Count() > 0)
-                                        {
-                                            foreach (var history in Model.IsNotificationHistories)
-                                            {
-                                                if (history.IsClicked == false)
-                                                {
-                                                    <li>
-                                                        <a href="@Url.Action("UnclickAlert", "Tickets", new { id = history.Id })">
-                                                            <p style="margin-bottom: -3px" class="text-info">
-                                                                @if (history.OldValue != null && history.NewValue != null)
-                                                                {
-                                                                    @(String.Format("{0} {1} {2} from {3} to {4}", history.Author.FirstName, history.Action.Name.ToLower(),
-                                                history.Property.Name.ToLower(), history.OldValue, history.NewValue))
-                                                                }
-                                                                @if (history.OldValue == null && history.NewValue != null)
-                                                                {
-                                                                    @(String.Format("{0} {1} {2} {3}", history.Author.FirstName, history.Action.Name.ToLower(),
-                                                history.Property.Name.ToLower(), history.NewValue))
-                                                                }
-                                                            </p>
-                                                            <p class="text-muted">
-                                                                @Html.ToUserTime(history.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
-                                                            </p>
-                                                        </a>
-                                                    </li>
-                                                }
-                                                else
-                                                {
-                                                    <li>
-                                                        <a href="@Url.Action("Details", "Tickets", new { id = history.TicketId })">
-                                                            <p style="margin-bottom: -3px">
-                                                                @if (history.OldValue != null && history.NewValue != null)
-                                                                {
-                                                                    @(String.Format("{0} {1} {2} from {3} to {4}", history.Author.FirstName, history.Action.Name.ToLower(),
-                                                history.Property.Name.ToLower(), history.OldValue, history.NewValue))
-                                                                }
-                                                                @if (history.OldValue == null && history.NewValue != null)
-                                                                {
-                                                                    @(String.Format("{0} {1} {2} {3}", history.Author.FirstName, history.Action.Name.ToLower(),
-                                                history.Property.Name.ToLower(), history.NewValue))
-                                                                }
-                                                            </p>
-                                                            <p class="text-muted">
-                                                                @Html.ToUserTime(history.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
-                                                            </p>
-                                                        </a>
-                                                    </li>
-                                                }
-                                            }
-                                        }*@
+                                    
                                     else
                                     {
                                         <li id="alerts-empty-note"><a href="#" class="disabled"><p>You're all caught up</p></a></li>
@@ -247,27 +198,12 @@
                                     <li><a href="@Url.Action("Clear", "ApplicationBase")">Clear alerts</a></li>
                                 </ul>
                             </li>
-                            @*<li>
-                                    <a href="#settings" class="btn-rotate">
-                                        <i class="ti-settings"></i>
-                                        <p class="hidden-md hidden-lg">
-                                            Settings
-                                        </p>
-                                    </a>
-                                </li>*@
                         </ul>
                     </div>
                 </div>
             </nav>
             <div class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <ul id="alerts-list">
-                                <li>None yet</li>
-                            </ul>
-                        </div>
-                    </div>
                     @RenderBody()
                 </div>
             </div>
@@ -354,15 +290,3 @@
 
 </body>
 </html>
-
-
-@*<li>
-        <a href="@Url.Action("UnclickAlert", "Tickets", new { id = alert.LinkAlertId })">
-            <p style="margin-bottom: -3px" class="text-info">
-                @alert.DisplayAlert
-            </p>
-            <p class="text-muted">
-                @Html.ToUserTime(alert.DisplayTime, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
-            </p>
-        </a>
-    </li>*@

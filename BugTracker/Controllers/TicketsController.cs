@@ -78,6 +78,78 @@ namespace BugTracker.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Tickets/Create
+        [System.Web.Mvc.Authorize(Roles = "Submitter")]
+        public ActionResult CreateForProject(int? id)
+        {
+            ViewBag.active = "tickets";
+            UserProjectHelper helper = new UserProjectHelper();
+            NewTicketForProjectViewModel vm = new NewTicketForProjectViewModel();
+            if (id != null)
+            {
+                var project = db.Projects.Find(id);
+                if (project != null)
+                {
+                    if (helper.UserIsOnProject(User.Identity.GetUserId(), id.Value))
+                    {
+                        vm.DisplayProject = project.Title;
+                        vm.StaticProjectId = project.Id;
+                        vm.TypeList = new SelectList(db.TicketTypes, "Id", "Name");
+                        vm.PriorityList = new SelectList(db.TicketPriorities, "Id", "Name");
+                        return View(vm);
+                    }
+                }
+            }
+            return RedirectToAction("Index", "Projects");
+        }
+
+        // POST: Tickets/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [System.Web.Mvc.Authorize(Roles = "Submitter")]
+        public ActionResult CreateForProject(NewTicketForProjectViewModel vm)
+        {
+            UserProjectHelper helper = new UserProjectHelper();
+            if (ModelState.IsValid)
+            {
+                var project = db.Projects.Find(vm.StaticProjectId);
+                if (helper.UserIsOnProject(User.Identity.GetUserId(), project.Id))
+                {
+                    var ticket = new Ticket();
+                    ticket.TicketStatusId = 4;
+                    ticket.OwnerUserId = User.Identity.GetUserId();
+                    ticket.Created = DateTimeOffset.Now;
+                    ticket.ProjectId = vm.StaticProjectId;
+                    ticket.TicketTypeId = vm.TicketTypeId;
+                    ticket.TicketPriorityId = vm.TicketPriorityId;
+                    ticket.Title = vm.Title;
+                    ticket.Description = vm.Description;
+                    db.Tickets.Add(ticket);
+
+                    var history = new TicketHistory();
+                    history.TicketId = ticket.Id;
+                    history.AuthorId = User.Identity.GetUserId();
+                    history.Created = DateTimeOffset.Now;
+                    history.PropertyId = 15;
+                    history.ActionId = 1;
+                    db.TicketHistories.Add(history);
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                vm.TypeList = new SelectList(db.TicketTypes, "Id", "Name", vm.TicketTypeId);
+                vm.PriorityList = new SelectList(db.TicketPriorities, "Id", "Name", vm.TicketPriorityId);
+                return View(vm);
+            }
+            return View(vm);
+
+        }
+
         // POST: Tickets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -389,7 +461,7 @@ namespace BugTracker.Controllers
                     {
                         await SendEditEmail(ticket.AssignToUserId, ticket.Id);
                     }
-                    
+
                     return RedirectToAction("Details", new { id = vm.Id });
                 }
                 return RedirectToAction("Index");

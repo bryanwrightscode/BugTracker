@@ -163,10 +163,10 @@ namespace BugTracker.Migrations
             }
 
             //Ticket Statuses
-            if (!context.TicketStatuses.Any(p => p.Name == "Unassigned"))
+            if (!context.TicketStatuses.Any(p => p.Name == "Opened"))
             {
                 var status = new TicketStatus();
-                status.Name = "Unassigned";
+                status.Name = "Opened";
                 context.TicketStatuses.Add(status);
             }
             if (!context.TicketStatuses.Any(p => p.Name == "Assigned"))
@@ -175,24 +175,36 @@ namespace BugTracker.Migrations
                 status.Name = "Assigned";
                 context.TicketStatuses.Add(status);
             }
+            if (!context.TicketStatuses.Any(p => p.Name == "In Progress"))
+            {
+                var status = new TicketStatus();
+                status.Name = "In Progress";
+                context.TicketStatuses.Add(status);
+            }
             if (!context.TicketStatuses.Any(p => p.Name == "Resolved"))
             {
                 var status = new TicketStatus();
                 status.Name = "Resolved";
                 context.TicketStatuses.Add(status);
             }
+            if (!context.TicketStatuses.Any(p => p.Name == "Closed"))
+            {
+                var status = new TicketStatus();
+                status.Name = "Closed";
+                context.TicketStatuses.Add(status);
+            }
 
             //Ticket Types
-            if (!context.TicketTypes.Any(p => p.Name == "Hardware"))
+            if (!context.TicketTypes.Any(p => p.Name == "Bug Fix"))
             {
                 var type = new TicketType();
-                type.Name = "Hardware";
+                type.Name = "Bug Fix";
                 context.TicketTypes.Add(type);
             }
-            if (!context.TicketTypes.Any(p => p.Name == "Software"))
+            if (!context.TicketTypes.Any(p => p.Name == "Research"))
             {
                 var type = new TicketType();
-                type.Name = "Software";
+                type.Name = "Research";
                 context.TicketTypes.Add(type);
             }
 

@@ -588,6 +588,7 @@
     <Content Include="Views\Manage\AddProfilePicture.cshtml" />
     <Content Include="Views\Projects\Details.cshtml" />
     <Content Include="Views\Manage\Index - Copy.cshtml" />
+    <Content Include="Views\Tickets\CreateForProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -46,6 +46,32 @@ namespace BugTracker.Models
         public SelectList PriorityList { get; set; }
     }
 
+    public class NewTicketForProjectViewModel : ApplicationBaseViewModel
+    {
+        [Required(ErrorMessage = "A title is required")]
+        [Display(Name = "Ticket Title")]
+        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long", MinimumLength = 6)]
+        public string Title { get; set; }
+
+        [Required(ErrorMessage = "A description is required")]
+        [Display(Name = "Describe the issue")]
+        [StringLength(280, ErrorMessage = "The {0} must be at least {2} characters long", MinimumLength = 6)]
+        public string Description { get; set; }
+
+        public int StaticProjectId { get; set; }
+
+        [Required(ErrorMessage = "A ticket type is required")]
+        public int TicketTypeId { get; set; }
+
+        [Required(ErrorMessage = "A ticket priority is required")]
+        public int TicketPriorityId { get; set; }
+
+        public SelectList TypeList { get; set; }
+        public SelectList PriorityList { get; set; }
+
+        public string DisplayProject { get; set; }
+    }
+
     //public class EditTicketViewModel
     //{
     //    public Ticket Ticket { get; set; }
