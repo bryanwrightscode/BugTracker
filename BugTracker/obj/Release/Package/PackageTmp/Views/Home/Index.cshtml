@@ -21,8 +21,20 @@
                 <h4 class="card-title">Tickets Per Project</h4>
             </div>
             <div class="card-content">
-                <div id="chart-container">
+                <div class="chart-container" style="position: relative; height: 30vh;">
                     <canvas id="chartjsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Tickets Per Status</h4>
+            </div>
+            <div class="card-content">
+                <div class="chart-container" style="position: relative; height: 30vh;">
+                    <canvas id="ticket-status-chart"></canvas>
                 </div>
             </div>
         </div>
@@ -235,32 +247,66 @@
         console.log(@Html.Raw(Json.Encode(Model.ChartJsLables)));
         console.log(@Html.Raw(Json.Encode(Model.ChartJsValues)));
         var ctx = $('#chartjsChart');
+
         var chart = new Chart(ctx, {
-            type: 'bar',
+            type: 'doughnut',
             data: {
-                labels: @Html.Raw(Json.Encode(Model.ChartJsLables)),
                 datasets: [{
-                    label: 'Projects',
                     data: @Html.Raw(Json.Encode(Model.ChartJsValues)),
                     backgroundColor: [
-                        '#68B3C8',
-                        '#68B3C8',
-                        '#68B3C8',
-                        '#68B3C8',
-                        '#68B3C8',
-                        '#68B3C8'
-                    ]
-                }]
+                        '#7A9E9F',
+                        '#6A8E9F',
+                        '#5A7E9F',
+                        '#4A6E9F',
+                        '#3A5E9F',
+                        '#2A4E9F',
+                        '#1A3E9F'
+                    ],
+                    label: 'Projects'
+                }],
+                labels: @Html.Raw(Json.Encode(Model.ChartJsLables))
             },
             options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                maintainAspectRatio: false
             }
-        });
+        })
     </script>
+
+<script type="text/javascript">
+        var ctx = $('#ticket-status-chart');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: @Html.Raw(Json.Encode(Model.TicketStatusChart.Values)),
+                    backgroundColor: [
+                        '#7A9E9F',
+                        '#EB5E28',
+                        '#F3BB45'
+                    ],
+                    label: 'Dataset 1'
+                }],
+                labels: @Html.Raw(Json.Encode(Model.TicketStatusChart.Labels))
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                maintainAspectRatio: false
+            }
+        })
+</script>
 }

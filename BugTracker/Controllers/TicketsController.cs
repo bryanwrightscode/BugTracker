@@ -336,16 +336,43 @@ namespace BugTracker.Controllers
                         }
                         ticket.AssignToUserId = vm.AssignToUserId;
                     }
+                    var hub = GlobalHost.ConnectionManager.GetHubContext<AlertsHub>();
                     foreach (var change in histories)
                     {
                         change.AuthorId = user.Id;
                         change.Created = DateTimeOffset.Now;
                         change.TicketId = ticket.Id;
+                        change.Property = db.TicketHistoryProperties.Find(change.PropertyId);
+                        change.Action = db.TicketHistoryActions.Find(change.ActionId);
                         if (change.IsNotification == true && change.DeveloperId != null)
                         {
                             db.Users.Find(change.DeveloperId).Histories.Add(change);
                             db.Entry(ticket).State = EntityState.Modified;
                             db.SaveChanges();
+                            if (change.OldValue != null && change.NewValue != null)
+                            {
+                                Alert NewAlert = new Alert
+                                {
+                                    DisplayAlert = String.Format("{0} {1} {2} from {3} to {4}", change.Author.FirstName, change.Action.Name.ToLower(), change.Property.Name.ToLower(), change.OldValue, change.NewValue),
+                                    IsClicked = change.IsClicked,
+                                    DisplayTime = change.Created,
+                                    LinkTicketId = change.Ticket.Id,
+                                    LinkAlertId = change.Id
+                                };
+                                hub.Clients.All.Send(NewAlert.DisplayAlert, String.Format("{0}/Tickets/UnclickAlert/{1}", Request.Url.Host, NewAlert.LinkAlertId));
+                            }
+                            if (change.OldValue == null && change.NewValue != null)
+                            {
+                                Alert NewAlert = new Alert
+                                {
+                                    DisplayAlert = String.Format("{0} {1} {2} {3}", change.Author.FirstName, change.Action.Name.ToLower(), change.Property.Name.ToLower(), change.NewValue),
+                                    IsClicked = change.IsClicked,
+                                    DisplayTime = change.Created,
+                                    LinkTicketId = change.Ticket.Id,
+                                    LinkAlertId = change.Id
+                                };
+                                hub.Clients.All.Send(NewAlert.DisplayAlert, String.Format("{0}/Tickets/UnclickAlert/{1}", Request.Url.Host, NewAlert.LinkAlertId));
+                            }
                         }
                         else
                         {
@@ -362,7 +389,7 @@ namespace BugTracker.Controllers
                     {
                         await SendEditEmail(ticket.AssignToUserId, ticket.Id);
                     }
-
+                    
                     return RedirectToAction("Details", new { id = vm.Id });
                 }
                 return RedirectToAction("Index");
