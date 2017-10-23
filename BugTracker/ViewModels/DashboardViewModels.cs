@@ -30,4 +30,11 @@ namespace BugTracker.Models
         public ICollection<string> Labels { get; set; }
         public ICollection<int> Values { get; set; }
     }
+
+    public class TicketStatusChart
+    {
+        public ICollection<DateTimeOffset> Dates { get; set; }
+        public ICollection<int> Opened { get; set; }
+        public ICollection<int> Resolved { get; set; }
+    }
 }

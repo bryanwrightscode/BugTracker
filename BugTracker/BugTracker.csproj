@@ -216,6 +216,7 @@
     <Compile Include="Migrations\201710101421270_AddTicketHistoryProperties.Designer.cs">
       <DependentUpon>201710101421270_AddTicketHistoryProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\CodeFirst\TicketCount.cs" />
     <Compile Include="Models\CodeFirst\TicketHistoryAction.cs" />
     <Compile Include="Models\CodeFirst\TicketHistoryProperty.cs" />
     <Compile Include="Models\Helpers\CustomHelper.cs" />

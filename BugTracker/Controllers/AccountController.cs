@@ -222,7 +222,8 @@ namespace BugTracker.Controllers
                 }
                 AddErrors(result);
             }
-
+            var timeZones = TimeZoneInfo.GetSystemTimeZones();
+            model.TimeZones = new SelectList(timeZones, "Id", "Id", null);
             // If we got this far, something failed, redisplay form
             return View(model);
         }

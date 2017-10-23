@@ -136,6 +136,13 @@ namespace BugTracker.Controllers
                     history.ActionId = 1;
                     db.TicketHistories.Add(history);
 
+                    var count = new TicketCount();
+                    count.ProjectId = project.Id;
+                    count.OpenedCount = project.CurrentCreated + 1;
+                    count.ResolvedCount = project.CurrentResolved;
+                    count.Date = DateTimeOffset.Now;
+                    project.TicketCounts.Add(count);
+
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -179,6 +186,14 @@ namespace BugTracker.Controllers
                 history.PropertyId = 15;
                 history.ActionId = 1;
                 db.TicketHistories.Add(history);
+
+                var project = db.Projects.Find(vm.ProjectId);
+                var count = new TicketCount();
+                count.ProjectId = vm.ProjectId;
+                count.OpenedCount = project.CurrentCreated + 1;
+                count.ResolvedCount = project.CurrentResolved;
+                count.Date = DateTimeOffset.Now;
+                project.TicketCounts.Add(count);
 
                 db.SaveChanges();
                 return RedirectToAction("Index");

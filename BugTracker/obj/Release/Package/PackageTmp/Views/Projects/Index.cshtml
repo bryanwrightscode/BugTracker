@@ -82,11 +82,15 @@
 
                                         </td>
                                         <td>
-                                            @if (Request.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("ProjectManager")))
-                                                {
-                                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) <span> | </span>
-                                                @Html.ActionLink("Assign", "Assign", new { id = item.Id })
-                                                }
+                                            @if (User.IsInRole("Submitter"))
+                                            {
+                                                <a href="@Url.Action("CreateForProject", "Tickets", new { id = item.Id })" tabindex="0" role="button" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Report an Issue for this Project" class="btn btn-simple btn-danger btn-icon"><i class="ti-alert"></i></a>
+                                            }
+                                            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                                            {
+                                                <a href="@Url.Action("Edit", new { id = item.Id })" tabindex="0" role="button" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Edit Project" class="btn btn-simple btn-warning btn-icon like"><i class="ti-pencil"></i></a>
+                                                <a href="@Url.Action("Assign", new { id = item.Id })" tabindex="0" role="button" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Assign Users on Project" class="btn btn-simple btn-warning btn-icon like"><i class="ti-user"></i></a>
+                                            }
                                         </td>
                                     </tr>
                                     }
@@ -208,5 +212,10 @@
                 "order": [[0, "desc"]]
             });
         });
+    </script>
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
     </script>
 }
