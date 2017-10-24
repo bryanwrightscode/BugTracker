@@ -175,12 +175,6 @@ namespace BugTracker.Migrations
                 status.Name = "Assigned";
                 context.TicketStatuses.Add(status);
             }
-            if (!context.TicketStatuses.Any(p => p.Name == "In Progress"))
-            {
-                var status = new TicketStatus();
-                status.Name = "In Progress";
-                context.TicketStatuses.Add(status);
-            }
             if (!context.TicketStatuses.Any(p => p.Name == "Resolved"))
             {
                 var status = new TicketStatus();

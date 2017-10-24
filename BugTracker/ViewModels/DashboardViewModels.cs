@@ -23,18 +23,25 @@ namespace BugTracker.Models
         public ICollection<string> ChartJsLables { get; set; }
         public ICollection<int> ChartJsValues { get; set; }
         public virtual Chart TicketStatusChart { get; set; }
+        public virtual TicketStatusLineChart TicketStatusLineChart { get; set; }
+        public ICollection<TicketStatusLineChart> LineCharts { get; set; }
+        public ICollection<Chart> DonutCharts { get; set; }
     }
 
     public class Chart
     {
         public ICollection<string> Labels { get; set; }
         public ICollection<int> Values { get; set; }
+        public string ProjectName { get; set; }
+        public int ProjectId { get; set; }
     }
 
-    public class TicketStatusChart
+    public class TicketStatusLineChart
     {
-        public ICollection<DateTimeOffset> Dates { get; set; }
+        public ICollection<string> Dates { get; set; }
         public ICollection<int> Opened { get; set; }
         public ICollection<int> Resolved { get; set; }
+        public int ProjectId { get; set; }
+        public string ProjectName { get; set; }
     }
 }

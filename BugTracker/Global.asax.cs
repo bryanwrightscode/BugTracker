@@ -1,4 +1,5 @@
 ﻿using BugTracker.Models.Helpers;
+using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;

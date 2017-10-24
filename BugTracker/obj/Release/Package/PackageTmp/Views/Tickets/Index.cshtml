@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-content">
             <div class="fresh-datatables">
-                <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="tickets">
+                <table class="table table-hover display responsive nowrap" cellspacing="0" width="100%" style="width: 100%" id="tickets">
                     <thead>
                         <tr>
                             <th>Ticket</th>
@@ -28,7 +28,7 @@
                             foreach (var item in Model.Tickets)
                             {
                                 <tr>
-                                    <td>
+                                    <td style="max-width: 150px; overflow-x: hidden">
                                         <a href="@Url.Action("Details", "Tickets", new { id = item.Id })">
                                             @Html.DisplayFor(modelItem => item.Title)
                                         </a>
@@ -85,7 +85,12 @@
     <script>
         $(document).ready(function () {
             $('#tickets').DataTable({
-                "order": [[1, "desc"]]
+                order: [1, 'desc'],
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 9 },
+                    {targets: [1, 2], type: 'date'}
+                ]
             });
         });
     </script>

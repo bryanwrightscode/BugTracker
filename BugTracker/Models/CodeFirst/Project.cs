@@ -19,8 +19,6 @@ namespace BugTracker.Models.CodeFirst
         public string Title { get; set; }
         public string Description { get; set; }
         public string AuthorId { get; set; }
-        public int CurrentCreated { get; set; }
-        public int CurrentResolved { get; set; }
 
         public virtual ICollection<ApplicationUser> Users { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }

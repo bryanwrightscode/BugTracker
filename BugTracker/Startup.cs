@@ -1,4 +1,6 @@
-﻿using Microsoft.Owin;
+﻿using BugTracker.Models.Helpers;
+using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartupAttribute(typeof(BugTracker.Startup))]

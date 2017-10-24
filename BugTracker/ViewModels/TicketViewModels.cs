@@ -96,6 +96,7 @@ namespace BugTracker.Models
         public int TicketPriorityId { get; set; }
         public int TicketStatusId { get; set; }
         public string AssignToUserId { get; set; }
+        public string ProjectTitle { get; set; }
 
         public SelectList TypeList { get; set; }
         public SelectList PriorityList { get; set; }

@@ -138,10 +138,12 @@ namespace BugTracker.Controllers
 
                     var count = new TicketCount();
                     count.ProjectId = project.Id;
-                    count.OpenedCount = project.CurrentCreated + 1;
-                    count.ResolvedCount = project.CurrentResolved;
+                    count.OpenedCount = project.Tickets.Count() + 1;
+                    count.ResolvedCount = project.Tickets.Where(t => t.TicketStatusId == 9).Count();
+                    count.TotalOpenedCount = db.Tickets.Count() + 1;
+                    count.TotalResolvedCount = db.Tickets.Where(t => t.TicketStatusId == 9).Count();
                     count.Date = DateTimeOffset.Now;
-                    project.TicketCounts.Add(count);
+                    db.TicketCounts.Add(count);
 
                     db.SaveChanges();
                     return RedirectToAction("Index");
@@ -190,10 +192,12 @@ namespace BugTracker.Controllers
                 var project = db.Projects.Find(vm.ProjectId);
                 var count = new TicketCount();
                 count.ProjectId = vm.ProjectId;
-                count.OpenedCount = project.CurrentCreated + 1;
-                count.ResolvedCount = project.CurrentResolved;
+                count.OpenedCount = project.Tickets.Count() + 1;
+                count.ResolvedCount = project.Tickets.Where(t => t.TicketStatusId == 9).Count();
+                count.TotalOpenedCount = db.Tickets.Count() + 1;
+                count.TotalResolvedCount = db.Tickets.Where(t => t.TicketStatusId == 9).Count();
                 count.Date = DateTimeOffset.Now;
-                project.TicketCounts.Add(count);
+                db.TicketCounts.Add(count);
 
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -257,6 +261,7 @@ namespace BugTracker.Controllers
             vm.TicketTypeId = ticket.TicketTypeId;
             vm.TicketPriorityId = ticket.TicketPriorityId;
             vm.Description = ticket.Description;
+            vm.ProjectTitle = ticket.Project.Title;
             if (ticket != null)
             {
                 if (User.IsInRole("Admin"))
@@ -400,6 +405,33 @@ namespace BugTracker.Controllers
                             {
                                 var history = new TicketHistory { PropertyId = 33, ActionId = 4, OldValue = ticket.TicketStatus.Name, NewValue = db.TicketStatuses.Find(vm.TicketStatusId).Name };
                                 histories.Add(history);
+                            }
+                            if ((ticket.TicketStatusId !=9) &&
+                                (vm.TicketStatusId == 9))
+                            {
+                                var count = new TicketCount();
+                                count.Date = DateTimeOffset.Now;
+                                count.OpenedCount = ticket.Project.Tickets.Count();
+                                count.ResolvedCount = ticket.Project.Tickets.Where(t => t.TicketStatusId == 9).Count() + 1;
+                                count.TotalOpenedCount = db.Tickets.Count();
+                                count.TotalResolvedCount = db.Tickets.Where(t => t.TicketStatusId == 9).Count() + 1;
+
+                                count.ProjectId = ticket.ProjectId;
+                                db.TicketCounts.Add(count);
+                                db.SaveChanges();
+                            }
+                            if ((ticket.TicketStatusId == 9) &&
+                                (vm.TicketStatusId != 9))
+                            {
+                                var count = new TicketCount();
+                                count.Date = DateTimeOffset.Now;
+                                count.OpenedCount = ticket.Project.Tickets.Count();
+                                count.ResolvedCount = ticket.Project.Tickets.Where(t => t.TicketStatusId == 9).Count() - 1;
+                                count.TotalOpenedCount = db.Tickets.Count();
+                                count.TotalResolvedCount = db.Tickets.Where(t => t.TicketStatusId == 9).Count() - 1;
+                                count.ProjectId = ticket.ProjectId;
+                                db.TicketCounts.Add(count);
+                                db.SaveChanges();
                             }
                         }
                         ticket.TicketStatusId = vm.TicketStatusId;

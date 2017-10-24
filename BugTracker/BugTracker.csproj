@@ -405,6 +405,7 @@
     <Content Include="Assets\img\tables\evernote.png" />
     <Content Include="Assets\img\tables\stylus.jpg" />
     <Content Include="Assets\img\tim_80x80.png" />
+    <Content Include="Assets\img\weave.png" />
     <Content Include="Assets\js\bootstrap-datetimepicker.js" />
     <Content Include="Assets\js\bootstrap-notify.js" />
     <Content Include="Assets\js\bootstrap-selectpicker.js" />

@@ -13,40 +13,109 @@
         }
     </h3>
 </div>
-
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Tickets Per Project</h4>
-            </div>
-            <div class="card-content">
-                <div class="chart-container" style="position: relative; height: 30vh;">
-                    <canvas id="chartjsChart"></canvas>
+@if (User.IsInRole("Admin"))
+{
+    <div class="row">
+        @if (Model.ChartJsLables != null && Model.ChartJsValues != null)
+        {
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Tickets Per Project</h4>
+                </div>
+                <div class="card-content">
+                    <div class="chart-container" style="position: relative; height: 30vh;">
+                        <canvas id="chartjsChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Tickets Per Status</h4>
-            </div>
-            <div class="card-content">
-                <div class="chart-container" style="position: relative; height: 30vh;">
-                    <canvas id="ticket-status-chart"></canvas>
+        }
+        @if (Model.TicketStatusChart != null)
+        {
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Tickets Per Status</h4>
+                </div>
+                <div class="card-content">
+                    <div class="chart-container" style="position: relative;">
+                        <canvas id="ticket-status-chart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
+        }
+        @if (Model.TicketStatusLineChart != null)
+        {
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Opened vs Resolved for All Projects</h4>
+                </div>
+                <div class="card-content">
+                    <div class="chart-container" style="position: relative;">
+                        <canvas id="openedVsResolved"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
     </div>
+}
 
-</div>
+@if (User.IsInRole("ProjectManager"))
+{
+    <div class="row">
+        @if (Model.LineCharts != null)
+        {
+            foreach (var chart in Model.LineCharts)
+            {
+                <div class="col-md-4">
+                    <h3>@chart.ProjectName</h3>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Opened vs Resolved</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="chart-container" style="position: relative; min-height: 30vh">
+                                <canvas id="@chart.ProjectId"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+    </div>
+    <div class="row">
+        @if (Model.DonutCharts != null)
+        {
+            foreach (var chart in Model.DonutCharts)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Tickets Per Status (@chart.ProjectName)</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="chart-container" style="position: relative;">
+                                <canvas id="@String.Format("{0}{1}", chart.ProjectId, "donut")"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+}
+
 
 <div class="row">
     @if (Model.Assigned.Count() > 0 && Model.Assigned != null)
     {
         <div class="col-lg-12 col-sm-12">
-            <h4>Proejcts</h4>
+            <h4>Projects</h4>
         </div>
         <div class="col-lg-3 col-sm-6">
             <div class="card">
@@ -243,7 +312,9 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+    @if (Model.ChartJsLables != null && Model.ChartJsValues != null)
+    {
+        <script type="text/javascript">
         console.log(@Html.Raw(Json.Encode(Model.ChartJsLables)));
         console.log(@Html.Raw(Json.Encode(Model.ChartJsValues)));
         var ctx = $('#chartjsChart');
@@ -277,10 +348,12 @@
                 },
                 maintainAspectRatio: false
             }
-        })
-    </script>
-
-<script type="text/javascript">
+        });
+        </script>
+    }
+    @if (Model.TicketStatusChart != null)
+    {
+        <script type="text/javascript">
         var ctx = $('#ticket-status-chart');
         var chart = new Chart(ctx, {
             type: 'doughnut',
@@ -290,7 +363,8 @@
                     backgroundColor: [
                         '#7A9E9F',
                         '#EB5E28',
-                        '#F3BB45'
+                        '#F3BB45',
+                        '#66615B'
                     ],
                     label: 'Dataset 1'
                 }],
@@ -307,6 +381,99 @@
                 },
                 maintainAspectRatio: false
             }
-        })
-</script>
+        });
+        </script>
+    }
+    @if (Model.DonutCharts != null)
+    {
+        foreach (var chart in Model.DonutCharts)
+        {
+            <script type="text/javascript">
+        var ctx = $('@String.Format("{0}{1}{2}", "#", chart.ProjectId, "donut")');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: @Html.Raw(Json.Encode(chart.Values)),
+                    backgroundColor: [
+                        '#7A9E9F',
+                        '#EB5E28',
+                        '#F3BB45',
+                        '#66615B'
+                    ],
+                    label: 'Dataset 1'
+                }],
+                labels: @Html.Raw(Json.Encode(chart.Labels))
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                maintainAspectRatio: false
+            }
+        });
+            </script>
+        }
+    }
+
+    @if (Model.TicketStatusLineChart != null)
+    {
+        <script>
+                            new Chart(document.getElementById("openedVsResolved"), {
+            type: 'line',
+            data: {
+                                labels: @Html.Raw(Json.Encode(Model.TicketStatusLineChart.Dates)),
+                datasets: [{
+                                    data: @Html.Raw(Json.Encode(Model.TicketStatusLineChart.Resolved)),
+                    label: "Closed",
+                    backgroundColor: '#7AC29A',
+                    borderColor: "#7AC29A",
+                    fill: false
+                }, {
+                                    data: @Html.Raw(Json.Encode(Model.TicketStatusLineChart.Opened)),
+                    label: "Opened All Time",
+                    borderColor: "#66615B",
+                    backgroundColor: '#66615B',
+                    fill: false
+                }]
+            }
+                });
+        </script>
+    }
+
+    @if (User.IsInRole("ProjectManager"))
+    {
+        if (Model.LineCharts != null)
+        {
+            foreach (var chart in Model.LineCharts)
+            {
+                <script>
+                        new Chart(document.getElementById(@chart.ProjectId), {
+                        type: 'line',
+                        data: {
+                        labels: @Html.Raw(Json.Encode(chart.Dates)),
+                        datasets: [{
+                        data: @Html.Raw(Json.Encode(chart.Resolved)),
+                        label: "Closed",
+                        backgroundColor: '#7AC29A',
+                        borderColor: "#7AC29A",
+                        fill: false
+                }, {
+                        data: @Html.Raw(Json.Encode(chart.Opened)),
+                        label: "Opened All Time",
+                        borderColor: "#66615B",
+                        backgroundColor: '#66615B',
+                        fill: false
+                }]
+            }
+        });
+                </script>
+            }
+        }
+    }
 }

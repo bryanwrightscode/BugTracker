@@ -12,6 +12,8 @@ namespace BugTracker.Models.CodeFirst
         public DateTimeOffset Date { get; set; }
         public int OpenedCount { get; set; }
         public int ResolvedCount { get; set; }
+        public int TotalOpenedCount { get; set; }
+        public int TotalResolvedCount { get; set; }
 
         public virtual Project Project { get; set; }
     }

@@ -13,3 +13,28 @@ ul#alerts-menu.dropdown-menu {
     max-height: 70vh;
     overflow-x: auto;
 }
+
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child:before, table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child:before{
+    top: 18px !important;
+}
+
+ol#comments-list.chat {
+    height: auto;
+    max-height: 40vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+ul#history-list.list-unstyled {
+    height: auto;
+    max-height: 40vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+ul#attachments-list.list-unstyled {
+    height: auto;
+    max-height: 50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

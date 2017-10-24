@@ -25,17 +25,17 @@
                     @if (Model.Assigned.Count() > 0)
                     {
                         <div class="fresh-datatables">
-                            <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="Assigned">
+                            <table class="table table-hover display responsive nowrap" cellspacing="0" width="100%" style="width: 100%" id="Assigned">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            Title
+                                        </th>
                                         <th>
                                             Created
                                         </th>
                                         <th>
                                             Updated
-                                        </th>
-                                        <th>
-                                            Title
                                         </th>
                                         <th>
                                             Description
@@ -51,6 +51,11 @@
                                     {
                                     <tr>
                                         <td>
+                                            <a href="@Url.Action("Details", "Projects", new { id = item.Id })">
+                                                @Html.DisplayFor(modelItem => item.Title)
+                                            </a>
+                                        </td>
+                                        <td>
                                             @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                         </td>
                                         <td>
@@ -58,11 +63,6 @@
                                             {
                                                 @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                             }
-                                        </td>
-                                        <td>
-                                            <a href="@Url.Action("Details", "Projects", new { id = item.Id })">
-                                                @Html.DisplayFor(modelItem => item.Title)
-                                            </a>
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Description)
@@ -111,17 +111,17 @@
                         @if (Model.All.Count > 0)
                         {
                             <div class="fresh-datatables">
-                                <table class="table table-hover table-striped" cellspacing="0" width="100%" style="width: 100%" id="All">
+                                <table class="table table-hover display responsive nowrap" cellspacing="0" width="100%" style="width: 100%" id="All">
                                     <thead>
                                         <tr>
+                                            <th>
+                                                Title
+                                            </th>
                                             <th>
                                                 Created
                                             </th>
                                             <th>
                                                 Updated
-                                            </th>
-                                            <th>
-                                                Title
                                             </th>
                                             <th>
                                                 Description
@@ -137,6 +137,11 @@
                                         {
                                             <tr class="@(item.Users.Any(u => u.Id == User.Identity.GetUserId()) ? "success" : "")">
                                                 <td>
+                                                    <a href="@Url.Action("Details", "Projects", new { id = item.Id })">
+                                                        @Html.DisplayFor(modelItem => item.Title)
+                                                    </a>
+                                                </td>
+                                                <td>
                                                     @Html.ToUserTime(item.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                                 </td>
                                                 <td>
@@ -144,11 +149,6 @@
                                                     {
                                                         @Html.ToUserTime(item.Updated.Value, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")
                                                     }
-                                                </td>
-                                                <td>
-                                                    <a href="@Url.Action("Details", "Projects", new { id = item.Id })">
-                                                        @Html.DisplayFor(modelItem => item.Title)
-                                                    </a>
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Description)
@@ -206,10 +206,18 @@
     <script>
         $(document).ready(function () {
             $('#Assigned').DataTable({
-                "order": [[0, "desc"]]
+                "order": [[0, "desc"]],
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 5 }
+                ]
             });
             $('#All').DataTable({
-                "order": [[0, "desc"]]
+                "order": [[0, "desc"]],
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 5 }
+                ]
             });
         });
     </script>

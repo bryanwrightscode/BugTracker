@@ -54,12 +54,22 @@
                 <h4 class="card-title">Comments</h4>
             </div>
             <div class="card-content">
-                <ol class="chat">
+                <ol class="chat" id="comments-list">
                     @foreach (var comment in Model.TicketComments)
                     {
                         if (comment.AuthorId == Model.User.Id)
                         {
                     <li class="self">
+                        <div class="avatar">
+                            @if (comment.Author.ProfilePictureFileUrl != null)
+                            {
+                                <img src="@comment.Author.ProfilePictureFileUrl" alt="profile-photo">
+                            }
+                            else
+                            {
+                                <img src="~/Assets/img/faces/face-0.jpg" />
+                            }
+                        </div>
                         <div class="msg">
                             <p>@comment.Author.FullName:</p>
                             <p>
@@ -76,6 +86,16 @@
                         else
                         {
                     <li class="other">
+                        <div class="avatar">
+                            @if (comment.Author.ProfilePictureFileUrl != null)
+                            {
+                                <img src="@comment.Author.ProfilePictureFileUrl" />
+                            }
+                            else
+                            {
+                                <img src="~/Assets/img/faces/face-0.jpg" />
+                            }
+                        </div>
                         <div class="msg">
                             <p>@comment.Author.FullName:</p>
                             <p>
@@ -117,7 +137,7 @@
                         <h4 class="card-title">Ticket History</h4>
                     </div>
                     <div class="card-content">
-                        <ul class="list-unstyled">
+                        <ul class="list-unstyled" id="history-list">
                             @foreach (var history in Model.TicketHistories.Take(10))
                             {
                                 <li>
@@ -223,7 +243,7 @@
                             <div class="col-xs-7"><h4 class="card-title">Attachments</h4></div>
                             <div class="col-xs-5">
                                 <div class="pull-right">
-                                    <button class="btn btn-success btn-fill btn-icon btn-sm" type="button" data-toggle="collapse" data-target="#fileUpload" aria-expanded="false" aria-controls="file-upload">
+                                    <button class="btn btn-success btn-fill btn-icon btn-sm" type="button" style="margin-right: 10px" data-toggle="collapse" data-target="#fileUpload" aria-expanded="false" aria-controls="file-upload">
                                         <i class="ti-plus"></i>
                                     </button>
                                 </div>
@@ -231,27 +251,27 @@
                         </div>
                     </div>
                     <div class="card-content">
-                        <ul class="list-unstyled">
+                        <ul class="list-unstyled" id="attachments-list">
                             @foreach (var attachment in Model.TicketAttachments)
                             {
                             <li>
                                 <div class="row">
-                                    <div class="col-xs-3">
-                                        <div class="icon-big icon-info text-center">
+                                    <div class="col-xs-2">
+                                        <div class="icon-default text-center">
                                             <i class="ti-file"></i>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6">
-                                        @Html.Raw(attachment.FileName)
+                                    <div class="col-xs-8">
+                                        <p style="overflow-x: hidden">attachment.FileName</p>
                                         @if (attachment.Description != null)
                                             {
                                             <p>@Html.Raw(attachment.Description)</p>
                                             }
                                         <span class="text-muted">@Html.ToUserTime(attachment.Created, Model.CurrentUser.TimeZone, "MM/dd/yy h:mm tt")</span>
                                     </div>
-                                    <div class="col-xs-3">
-                                        <div class="pull-right">
-                                            <a class="btn btn-icon btn-fill btn-default btn-sm" href="@Html.Raw(attachment.FileUrl)" target="_blank">
+                                    <div class="col-xs-2">
+                                        <div class="pull-right" style="margin-right: 10px;">
+                                            <a class="btn btn-icon btn-fill btn-info btn-sm" href="@Html.Raw(attachment.FileUrl)" target="_blank">
                                                 <i class="ti-download"></i>
                                             </a>
                                         </div>
