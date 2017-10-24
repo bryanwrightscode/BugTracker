@@ -13,7 +13,7 @@ The Bug Tracker web application lets compainies find, fix, and track software bu
 
 ## Authors
 
-* **Bryan Wright**
+* **[Bryan Wright]**(https://bwright-blog.azurewebsites.net/)
 
 ## Acknowledgments
 
