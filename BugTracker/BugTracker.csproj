@@ -246,6 +246,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="android-chrome-192x192.png" />
+    <Content Include="android-chrome-256x256.png" />
+    <Content Include="apple-touch-icon.png" />
     <Content Include="Assets\css\bootstrap.min.css" />
     <Content Include="Assets\css\demo.css" />
     <Content Include="Assets\css\font-awesome.min.css" />
@@ -399,6 +402,12 @@
     <Content Include="Assets\img\flags\VN.png" />
     <Content Include="Assets\img\flags\YE.png" />
     <Content Include="Assets\img\geometry.png" />
+    <Content Include="Assets\img\logo-01.svg" />
+    <Content Include="Assets\img\logo-2.png" />
+    <Content Include="Assets\img\logo-3.png" />
+    <Content Include="Assets\img\logo-4.png" />
+    <Content Include="Assets\img\logo-5.png" />
+    <Content Include="Assets\img\logo.png" />
     <Content Include="Assets\img\mask.png" />
     <Content Include="Assets\img\new_logo.png" />
     <Content Include="Assets\img\tables\agenda.png" />
@@ -430,8 +439,11 @@
     <Content Include="Assets\js\paper-dashboard.js" />
     <Content Include="Assets\js\perfect-scrollbar.min.js" />
     <Content Include="Assets\js\sweetalert2.js" />
+    <Content Include="browserconfig.xml" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\ie10-viewport-bug-workaround.css" />
+    <Content Include="favicon-16x16.png" />
+    <Content Include="favicon-32x32.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -442,6 +454,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="mstile-150x150.png" />
     <Content Include="private.config" />
     <Content Include="Assets\.DS_Store" />
     <Content Include="Assets\css\.DS_Store" />
@@ -516,8 +529,10 @@
     <Content Include="Assets\sass\paper\_typography.scss" />
     <Content Include="Assets\sass\paper\_variables.scss" />
     <Content Include="Assets\examples\.DS_Store" />
+    <Content Include="manifest.json" />
     <None Include="Properties\PublishProfiles\bwright-bugtracker - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\bwright-bugtracker - Web Deploy.pubxml" />
+    <Content Include="safari-pinned-tab.svg" />
     <Content Include="Scripts\d3\d3.js" />
     <Content Include="Scripts\d3\d3.min.js" />
     <Content Include="Scripts\d3\LICENSE" />

@@ -3,9 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="~/Assets/img/apple-icon.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="~/Assets/img/favicon.png" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#6079d4">    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
     <title>@ViewBag.Title - Bug Tracker</title>
 
@@ -28,8 +30,14 @@
                 Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
             -->
             <div class="logo">
-                @Html.ActionLink("BT", "Index", "Home", null, new { @class = "simple-text logo-mini" })
-                @Html.ActionLink("Bug Tracker", "Index", "Home", null, new { @class = "simple-text logo-normal" })
+                @*@Html.ActionLink("BT", "Index", "Home", null, new { @class = "simple-text logo-mini" })
+                @Html.ActionLink("Bug Tracker", "Index", "Home", null, new { @class = "simple-text logo-normal" })*@
+                @*<a href="@Url.Action("Index", "Home")" class="">
+                    <img src="~/Assets/img/logo.png" style="height:inherit"/>
+                </a>*@
+                <a href="@Url.Action("Index", "Home")">
+                    <img src="~/Assets/img/logo-4.png" style="margin-left:auto;margin-right:auto;display:block;height:39px" />
+                </a>
             </div>
             <div class="sidebar-wrapper">
                 <div class="user">
@@ -222,6 +230,7 @@
                                     Blog
                                 </a>
                             </li>
+                            <li><p class="text-muted">Logo based on <i>Weaving</i> by <a href="https://thenounproject.com/TheGreenChicken/" target="_blank">Lisa Staudinger from the Noun Project</a></p></li>
                         </ul>
                     </nav>
                     <div class="copyright pull-right">
