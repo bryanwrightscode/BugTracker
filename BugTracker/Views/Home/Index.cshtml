@@ -315,8 +315,6 @@
     @if (Model.ChartJsLables != null && Model.ChartJsValues != null)
     {
         <script type="text/javascript">
-        console.log(@Html.Raw(Json.Encode(Model.ChartJsLables)));
-        console.log(@Html.Raw(Json.Encode(Model.ChartJsValues)));
         var ctx = $('#chartjsChart');
 
         var chart = new Chart(ctx, {
