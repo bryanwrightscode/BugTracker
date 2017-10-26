@@ -54,6 +54,7 @@ namespace BugTracker.Controllers
             ProjectDetailViewModel vm = new ProjectDetailViewModel();
             UserProjectHelper projectHelper = new UserProjectHelper();
             UserRoleHelper roleHelper = new UserRoleHelper();
+            TicketHelpers ticketHelper = new TicketHelpers();
             var user = db.Users.Find(User.Identity.GetUserId());
             var project = db.Projects.Find(id);
             if (project != null)
@@ -69,12 +70,15 @@ namespace BugTracker.Controllers
                     }
                     if (project.Tickets.Count() > 0)
                     {
-                        var titles = new List<string>();
-                        foreach (var ticket in project.Tickets.OrderBy(t => t.Title))
+                        vm.Tickets = project.Tickets.OrderByDescending(t => t.Created).ToList();
+                        if (User.IsInRole("Developer"))
                         {
-                            titles.Add(ticket.Title);
+                            vm.TicketsOn = ticketHelper.ListDevTickets(user.Id).OrderByDescending(t => t.Created).ToList();
                         }
-                        vm.Tickets = titles;
+                        if (User.IsInRole("Submitter"))
+                        {
+                            vm.TicketsOn = ticketHelper.ListSubTickets(user.Id).OrderByDescending(t => t.Created).ToList();
+                        }
                     }
                     if (project.Users.Count() > 0)
                     {

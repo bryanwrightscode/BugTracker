@@ -53,14 +53,29 @@
                 <div class="row">
                     <div class="col-sm-3"><p class="text-right">Tickets:</p></div>
                     <div class="col-sm-9">
-                        @if (Model.Tickets != null)
+                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                         {
-                            <ul class="list-inline">
-                                @foreach (var ticket in Model.Tickets)
-                                {
-                                    <li><span class="label label-primary">@Html.Raw(ticket)</span></li>
-                                }
-                            </ul>
+                            if (Model.Tickets != null)
+                            {
+                                <ul class="list-inline">
+                                    @foreach (var ticket in Model.Tickets)
+                                    {
+                                        <li><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })"><span class="label label-primary">@ticket.Title</span></a></li>
+                                    }
+                                </ul>
+                            }
+                        }
+                        @if (User.IsInRole("Developer") || User.IsInRole("Submitter"))
+                        {
+                            if (Model.TicketsOn != null)
+                            {
+                                <ul class="list-inline">
+                                    @foreach (var ticket in Model.TicketsOn)
+                                    {
+                                        <li><a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })"><span class="label label-primary">@ticket.Title</span></a></li>
+                                    }
+                                </ul>
+                            }
                         }
                     </div>
                 </div>

@@ -43,7 +43,8 @@ namespace BugTracker.Models
     {
         public Project Project { get; set; }
         public string ProjectManager { get; set; }
-        public ICollection<string> Tickets { get; set; }
+        public ICollection<Ticket> Tickets { get; set; }
+        public ICollection<Ticket> TicketsOn { get; set; }
         public ICollection<string> Users { get; set; }
     }
     public class EditProjectViewModel : ApplicationBaseViewModel
